@@ -1,65 +1,150 @@
-import Image from "next/image";
+"use client"
+
+import Link from "next/link"
+import { ArrowRight, CheckCircle2, FlaskConical, Truck, Users } from "lucide-react"
+import { Container } from "@/components/ui/container"
+import { Button } from "@/components/ui/button"
+import { blogPosts } from "@/lib/blog-data"
+import { motion } from "framer-motion"
+import { WhyChooseUsSection } from "@/components/home/WhyChooseUsSection"
+import { CompaniesSection } from "@/components/home/CompaniesSection"
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="flex flex-col min-h-screen">
+      {/* Hero Section */}
+      <section className="relative bg-slate-950 py-24 md:py-36 overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1576091160550-217358c7db81?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center opacity-10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-950/90" />
+
+        <Container className="relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="max-w-3xl space-y-8"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+            <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl md:text-7xl leading-tight">
+              Advanced <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Healthcare</span> <br />
+              Solutions for Life
+            </h1>
+            <p className="text-xl text-slate-300 md:text-2xl leading-relaxed max-w-2xl">
+              DK Medi Group is pioneering the future of medicine with high-quality, accessible pharmaceutical products designed to improve global health standards.
+            </p>
+            <div className="flex flex-wrap gap-4 pt-4">
+              <Button size="lg" variant="premium" className="h-14 px-8 text-lg" asChild>
+                <Link href="/products">Explore Products</Link>
+              </Button>
+              <Button variant="outline" size="lg" className="h-14 px-8 text-lg bg-white/5 border-white/20 text-white hover:bg-white/10 hover:text-white backdrop-blur-sm" asChild>
+                <Link href="/about">Our Story</Link>
+              </Button>
+            </div>
+          </motion.div>
+        </Container>
+      </section>
+
+      {/* Why Choose Us Section */}
+      <WhyChooseUsSection />
+
+      {/* About Preview */}
+      <section className="py-24 bg-white">
+        <Container>
+          <div className="grid grid-cols-1 gap-16 md:grid-cols-2 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="relative h-[500px] rounded-2xl overflow-hidden shadow-2xl"
+            >
+              <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1563213126-a4273aed2016?auto=format&fit=crop&q=80&w=800')] bg-cover bg-center" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
+              <div className="absolute bottom-8 left-8 text-white">
+                <div className="text-4xl font-bold mb-2">20+</div>
+                <div className="text-lg opacity-90">Years of Excellence</div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="space-y-8"
+            >
+              <h2 className="text-4xl font-bold tracking-tight text-slate-900">Who We Are</h2>
+              <p className="text-slate-600 text-lg leading-relaxed">
+                Established with a vision to redefine healthcare, DK Medi Group has grown into a trusted name in the pharmaceutical industry. We combine cutting-edge technology with traditional values of care to produce medicines that matter.
+              </p>
+              <ul className="space-y-4">
+                {[
+                  "ISO 9001:2015 Certified",
+                  "WHO-GMP Compliant Facilities",
+                  "Wide Range of Therapeutic Categories"
+                ].map((item, i) => (
+                  <li key={i} className="flex items-center gap-3">
+                    <CheckCircle2 className="h-6 w-6 text-blue-600 flex-shrink-0" />
+                    <span className="text-lg text-slate-700">{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <Button size="lg" variant="default" className="px-8" asChild>
+                <Link href="/about">Read Our Story <ArrowRight className="ml-2 h-4 w-4" /></Link>
+              </Button>
+            </motion.div>
+          </div>
+        </Container>
+      </section>
+
+      {/* Companies Section */}
+      <CompaniesSection />
+
+      {/* Latest Blog Posts */}
+      <section className="py-24 bg-slate-50">
+        <Container>
+          <div className="flex items-center justify-between mb-12">
+            <div>
+              <h2 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">Latest News & Insights</h2>
+              <p className="text-slate-600">Stay updated with the latest trends in healthcare.</p>
+            </div>
+            <Button variant="ghost" className="text-blue-600 hover:text-blue-700 hover:bg-blue-50" asChild>
+              <Link href="/blog">View All Posts <ArrowRight className="ml-2 h-4 w-4" /></Link>
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+            {blogPosts.slice(0, 3).map((post, index) => (
+              <motion.div
+                key={post.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
+              >
+                <div className="h-56 bg-slate-200 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style={{ backgroundImage: `url(${post.image})` }} />
+                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-blue-600 shadow-sm">
+                    {post.category}
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                    <Link href={`/blog/${post.slug}`}>
+                      {post.title}
+                    </Link>
+                  </h3>
+                  <p className="text-slate-600 mb-4 line-clamp-3 text-sm leading-relaxed">
+                    {post.excerpt}
+                  </p>
+                  <div className="flex items-center text-xs text-slate-500 font-medium pt-4 border-t border-slate-100">
+                    <span>{post.date}</span>
+                    <span className="mx-2">•</span>
+                    <span>{post.author}</span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </Container>
+      </section>
     </div>
-  );
+  )
 }
