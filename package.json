@@ -1,0 +1,23 @@
+{
+  "name": "dkm-pharma-next",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "seed": "node prisma/seed.js"
+  },
+  "dependencies": {
+    "next": "13.4.19",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "@prisma/client": "^5.2.0",
+    "bcryptjs": "^2.4.3",
+    "jose": "^4.14.4"
+  },
+  "devDependencies": {
+    "prisma": "^5.2.0"
+  }
+}
