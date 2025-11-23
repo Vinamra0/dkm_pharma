@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Product {
+  id             Int      @id @default(autoincrement())
+  name           String
+  therapeuticCat String
+  dosageForm     String
+  strength       String
+  manufacturer   String
+  packaging      String
+  imageUrl       String?
+  availability   Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Admin {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  password String
+}
