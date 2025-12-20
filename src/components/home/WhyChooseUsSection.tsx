@@ -43,7 +43,7 @@ const itemVariants = {
         y: 0,
         transition: {
             duration: 0.6,
-            ease: "easeOut",
+            ease: [0.17, 0.55, 0.55, 1] as [number, number, number, number],
         },
     },
 };
@@ -59,7 +59,7 @@ export function WhyChooseUsSection() {
                     transition={{ duration: 0.8 }}
                     className="text-center max-w-3xl mx-auto mb-20"
                 >
-                    <h2 className="text-4xl md:text-5xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">
+                    <h2 className="text-4xl md:text-5xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 pb-2">
                         Why Choose DK Medi Group?
                     </h2>
                     <p className="text-xl text-slate-600 leading-relaxed">

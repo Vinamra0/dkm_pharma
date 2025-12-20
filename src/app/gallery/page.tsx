@@ -41,7 +41,31 @@ const galleryImages = [
         src: "/gallery/award_ceremony.png",
         alt: "Excellence Awards",
         category: "Achievements"
-    }
+    },
+    {
+        id: 7,
+        src: "/gallery/innovation_hub.png",
+        alt: "Innovation Hub",
+        category: "Research & Development"
+    },
+    {
+        id: 8,
+        src: "/gallery/office_lobby.png",
+        alt: "Corporate Headquarters",
+        category: "Office Life"
+    },
+    {
+        id: 9,
+        src: "/gallery/logistics_center.png",
+        alt: "Global Logistics",
+        category: "Operations"
+    },
+    ...Array.from({ length: 281 - 192 + 1 }, (_, i) => ({
+        id: 10 + i,
+        src: `/gallery/thumb_${192 + i}.jpg`,
+        alt: `Gallery Image ${192 + i}`,
+        category: ["Office Life", "Research & Development", "Operations", "Our People", "Events", "Achievements"][i % 6]
+    }))
 ]
 
 export default function GalleryPage() {
