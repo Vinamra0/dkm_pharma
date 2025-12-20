@@ -12,12 +12,19 @@ export default function AboutPage() {
             {/* Hero Section */}
             <section className="bg-slate-900 py-20 text-white">
                 <Container>
-                    <div className="max-w-3xl">
-                        <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">About DK Medi Group</h1>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8 }}
+                        className="max-w-3xl"
+                    >
+                        <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+                            About <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">DK Medi Group</span>
+                        </h1>
                         <p className="text-xl text-slate-300">
                             Pioneering pharmaceutical excellence with a commitment to global health and wellness.
                         </p>
-                    </div>
+                    </motion.div>
                 </Container>
             </section>
 
@@ -83,7 +90,13 @@ export default function AboutPage() {
                                 </h4>
                                 <div className="relative inline-block">
                                     <h2 className="text-4xl font-bold text-slate-900 mb-2">Our Journey</h2>
-                                    <div className="absolute bottom-0 left-0 w-2/3 h-1.5 bg-gradient-to-r from-blue-600 via-cyan-500 to-transparent rounded-full" />
+                                    <motion.div
+                                        initial={{ scaleX: 0 }}
+                                        whileInView={{ scaleX: 1 }}
+                                        viewport={{ once: true }}
+                                        transition={{ duration: 0.8, ease: "circOut" }}
+                                        className="absolute bottom-0 left-0 w-2/3 h-1.5 bg-gradient-to-r from-blue-600 via-cyan-500 to-transparent rounded-full origin-left"
+                                    />
                                 </div>
                             </div>
 
@@ -128,7 +141,13 @@ export default function AboutPage() {
                     <div className="text-center mb-12">
                         <div className="inline-block relative">
                             <h2 className="text-3xl font-bold text-slate-900">Our Core Values</h2>
-                            <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-full" />
+                            <motion.div
+                                initial={{ scaleX: 0 }}
+                                whileInView={{ scaleX: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.8, ease: "circOut" }}
+                                className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-full origin-center"
+                            />
                         </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -168,7 +187,13 @@ export default function AboutPage() {
                             </h4>
                             <div className="relative inline-block mb-4">
                                 <h2 className="text-3xl font-bold text-slate-900 mb-2">Life at DK Medi Group</h2>
-                                <div className="absolute bottom-0 left-0 w-2/3 h-1.5 bg-gradient-to-r from-blue-600 via-cyan-500 to-transparent rounded-full" />
+                                <motion.div
+                                    initial={{ scaleX: 0 }}
+                                    whileInView={{ scaleX: 1 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.8, ease: "circOut" }}
+                                    className="absolute bottom-0 left-0 w-2/3 h-1.5 bg-gradient-to-r from-blue-600 via-cyan-500 to-transparent rounded-full origin-left"
+                                />
                             </div>
                             <p className="text-slate-600 max-w-2xl mt-2">
                                 We&apos;re more than just a company; we&apos;re a community of passionate individuals working together to make a difference.

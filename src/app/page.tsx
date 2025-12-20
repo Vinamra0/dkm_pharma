@@ -76,7 +76,13 @@ export default function Home() {
                 </h4>
                 <div className="relative inline-block mb-6">
                   <h2 className="text-4xl font-bold tracking-tight text-slate-900 mb-2">About Us</h2>
-                  <div className="absolute bottom-0 left-0 w-2/3 h-1.5 bg-gradient-to-r from-blue-600 via-cyan-500 to-transparent rounded-full" />
+                  <motion.div
+                    initial={{ scaleX: 0 }}
+                    whileInView={{ scaleX: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, ease: "circOut" }}
+                    className="absolute bottom-0 left-0 w-2/3 h-1.5 bg-gradient-to-r from-blue-600 via-cyan-500 to-transparent rounded-full origin-left"
+                  />
                 </div>
               </div>
               <p className="text-slate-600 text-lg leading-relaxed">
@@ -115,7 +121,13 @@ export default function Home() {
               </h4>
               <div className="relative inline-block mb-4">
                 <h2 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">Latest News & Insights</h2>
-                <div className="absolute bottom-0 left-0 w-2/3 h-1.5 bg-gradient-to-r from-blue-600 via-cyan-500 to-transparent rounded-full" />
+                <motion.div
+                  initial={{ scaleX: 0 }}
+                  whileInView={{ scaleX: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, ease: "circOut" }}
+                  className="absolute bottom-0 left-0 w-2/3 h-1.5 bg-gradient-to-r from-blue-600 via-cyan-500 to-transparent rounded-full origin-left"
+                />
               </div>
               <p className="text-slate-600 mt-2">Stay updated with the latest trends in healthcare.</p>
             </div>

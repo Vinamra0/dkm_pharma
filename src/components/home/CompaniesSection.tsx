@@ -30,7 +30,13 @@ export function CompaniesSection() {
                     <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2">
                         Trusted by Global Partners
                     </h2>
-                    <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-1/2 h-[3px] bg-gradient-to-r from-transparent via-blue-600 to-transparent" />
+                    <motion.div
+                        initial={{ scaleX: 0 }}
+                        whileInView={{ scaleX: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, ease: "circOut" }}
+                        className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-1/2 h-[3px] bg-gradient-to-r from-transparent via-blue-600 to-transparent origin-center"
+                    />
                 </div>
                 <p className="text-slate-600 max-w-2xl mx-auto">
                     We collaborate with leading international and multinational companies to bring the best healthcare solutions to you.
