@@ -77,7 +77,9 @@ export default function GalleryPage() {
             <section className="bg-slate-900 py-20 text-white">
                 <Container>
                     <div className="max-w-3xl">
-                        <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">Our Gallery</h1>
+                        <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+                            Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Gallery</span>
+                        </h1>
                         <p className="text-xl text-slate-300">
                             A glimpse into the life, culture, and facilities at DK Medi Group.
                         </p>
