@@ -125,7 +125,12 @@ export default function AboutPage() {
             {/* Core Values */}
             <section className="py-16 bg-white">
                 <Container>
-                    <h2 className="text-3xl font-bold text-center mb-12">Our Core Values</h2>
+                    <div className="text-center mb-12">
+                        <div className="inline-block relative">
+                            <h2 className="text-3xl font-bold text-slate-900">Our Core Values</h2>
+                            <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-full" />
+                        </div>
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {[
                             { title: "Integrity", desc: "We conduct our business with the highest ethical standards." },
