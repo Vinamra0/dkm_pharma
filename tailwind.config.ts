@@ -15,7 +15,13 @@ const config: Config = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["var(--font-sans)", "sans-serif"],
+        heading: ["var(--font-heading)", "sans-serif"],
+      },
       colors: {
+        midnight: "#0F172A", // Deep Midnight Navy for Headings
+        "slate-rich": "#334155", // Rich Slate for Body
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
