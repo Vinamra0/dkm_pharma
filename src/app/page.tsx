@@ -70,7 +70,21 @@ export default function Home() {
               viewport={{ once: true }}
               className="space-y-8"
             >
-              <h2 className="text-4xl font-bold tracking-tight text-slate-900">Who We Are</h2>
+              <div>
+                <h4 className="text-sm font-bold tracking-widest text-blue-600 uppercase mb-2">
+                  Who We Are
+                </h4>
+                <div className="relative inline-block mb-6">
+                  <h2 className="text-4xl font-bold tracking-tight text-slate-900 mb-2">About Us</h2>
+                  <motion.div
+                    initial={{ scaleX: 0 }}
+                    whileInView={{ scaleX: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, ease: "circOut" }}
+                    className="absolute bottom-0 left-0 w-2/3 h-1.5 bg-gradient-to-r from-blue-600 via-cyan-500 to-transparent rounded-full origin-left"
+                  />
+                </div>
+              </div>
               <p className="text-slate-600 text-lg leading-relaxed">
                 Established with a vision to redefine healthcare, DK Medi Group has grown into a trusted name in the pharmaceutical industry. We combine cutting-edge technology with traditional values of care to produce medicines that matter.
               </p>
@@ -102,8 +116,20 @@ export default function Home() {
         <Container>
           <div className="flex items-center justify-between mb-12">
             <div>
-              <h2 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">Latest News & Insights</h2>
-              <p className="text-slate-600">Stay updated with the latest trends in healthcare.</p>
+              <h4 className="text-sm font-bold tracking-widest text-blue-600 uppercase mb-2">
+                Updates
+              </h4>
+              <div className="relative inline-block mb-4">
+                <h2 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">Latest News & Insights</h2>
+                <motion.div
+                  initial={{ scaleX: 0 }}
+                  whileInView={{ scaleX: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, ease: "circOut" }}
+                  className="absolute bottom-0 left-0 w-2/3 h-1.5 bg-gradient-to-r from-blue-600 via-cyan-500 to-transparent rounded-full origin-left"
+                />
+              </div>
+              <p className="text-slate-600 mt-2">Stay updated with the latest trends in healthcare.</p>
             </div>
             <Button variant="ghost" className="text-blue-600 hover:text-blue-700 hover:bg-blue-50" asChild>
               <Link href="/blog">View All Posts <ArrowRight className="ml-2 h-4 w-4" /></Link>
@@ -116,27 +142,28 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
+                whileHover={{ y: -8 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className="bg-white rounded-3xl overflow-hidden shadow-sm shadow-blue-50/50 hover:shadow-[0_20px_40px_-15px_rgba(37,99,235,0.2)] transition-shadow duration-300 group"
               >
-                <div className="h-56 bg-slate-200 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style={{ backgroundImage: `url(${post.image})` }} />
-                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-blue-600 shadow-sm">
+                <div className="h-64 bg-slate-100 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style={{ backgroundImage: `url(${post.image})` }} />
+                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-4 py-1.5 rounded-full text-xs font-bold tracking-wide text-blue-600 shadow-sm uppercase">
                     {post.category}
                   </div>
                 </div>
-                <div className="p-6">
+                <div className="p-8">
                   <h3 className="text-xl font-bold mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors">
                     <Link href={`/blog/${post.slug}`}>
                       {post.title}
                     </Link>
                   </h3>
-                  <p className="text-slate-600 mb-4 line-clamp-3 text-sm leading-relaxed">
+                  <p className="text-slate-600 mb-6 line-clamp-3 text-sm leading-relaxed">
                     {post.excerpt}
                   </p>
-                  <div className="flex items-center text-xs text-slate-500 font-medium pt-4 border-t border-slate-100">
+                  <div className="flex items-center text-xs text-slate-500 font-bold tracking-wide pt-6 border-t border-slate-50 uppercase">
                     <span>{post.date}</span>
-                    <span className="mx-2">•</span>
+                    <span className="mx-2 text-blue-200">•</span>
                     <span>{post.author}</span>
                   </div>
                 </div>

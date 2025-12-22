@@ -26,9 +26,18 @@ export function CompaniesSection() {
     return (
         <section className="py-16 bg-white overflow-hidden">
             <div className="container mx-auto px-4 mb-10 text-center">
-                <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-4">
-                    Trusted by Global Partners
-                </h2>
+                <div className="relative inline-block mb-4">
+                    <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2">
+                        Trusted by Global Partners
+                    </h2>
+                    <motion.div
+                        initial={{ scaleX: 0 }}
+                        whileInView={{ scaleX: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, ease: "circOut" }}
+                        className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-1/2 h-[3px] bg-gradient-to-r from-transparent via-blue-600 to-transparent origin-center"
+                    />
+                </div>
                 <p className="text-slate-600 max-w-2xl mx-auto">
                     We collaborate with leading international and multinational companies to bring the best healthcare solutions to you.
                 </p>
@@ -48,7 +57,7 @@ export function CompaniesSection() {
                     {[...companies, ...companies].map((company, index) => (
                         <div
                             key={index}
-                            className="flex-shrink-0 flex items-center justify-center w-48 h-24 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-200 transition-all duration-300 cursor-pointer p-4"
+                            className="flex-shrink-0 flex items-center justify-center w-48 h-24 bg-white rounded-2xl shadow-sm shadow-blue-50/50 hover:shadow-[0_10px_30px_-10px_rgba(37,99,235,0.15)] transition-all duration-300 cursor-pointer p-6"
                         >
                             <div className="relative w-full h-full">
                                 <Image
