@@ -23,12 +23,6 @@ const stats = [
         color: 'from-cyan-500 to-cyan-600',
         href: '/admin/products'
     },
-    {
-        name: 'Views This Month',
-        value: '12.5K',
-        icon: TrendingUp,
-        color: 'from-purple-500 to-purple-600',
-    },
 ];
 
 const quickActions = [
@@ -58,7 +52,7 @@ export default function AdminDashboard() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.1 }}
-                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+                        className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 max-w-4xl"
                     >
                         {stats.map((stat, index) => (
                             <motion.div
