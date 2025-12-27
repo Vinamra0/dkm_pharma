@@ -28,6 +28,9 @@ export default async function BlogPage({
         )
     }
 
+    // Sort by date (latest first)
+    filteredPosts = filteredPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+
     return (
         <div className="bg-slate-50 min-h-screen py-12">
             <Container>
