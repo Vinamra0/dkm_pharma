@@ -1,10 +1,38 @@
+"use client"
+
 import Link from "next/link"
+import { useRouter, useSearchParams } from "next/navigation"
 import { blogPosts } from "@/lib/blog-data"
 import { Search } from "lucide-react"
+import { useState, useEffect } from "react"
 
 export function BlogSidebar() {
+    const router = useRouter()
+    const searchParams = useSearchParams()
+    const [searchTerm, setSearchTerm] = useState("")
+
+    useEffect(() => {
+        const search = searchParams.get("search")
+        if (search) {
+            setSearchTerm(search)
+        }
+    }, [searchParams])
+
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value
+        setSearchTerm(value)
+        
+        if (value.trim()) {
+            router.push(`/blog?search=${encodeURIComponent(value)}`)
+        } else {
+            router.push("/blog")
+        }
+    }
+
     const categories = Array.from(new Set(blogPosts.map((post) => post.category)))
-    const recentPosts = blogPosts.slice(0, 5)
+    const recentPosts = [...blogPosts]
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .slice(0, 5)
 
     return (
         <div className="space-y-8">
@@ -15,6 +43,8 @@ export function BlogSidebar() {
                     <input
                         type="text"
                         placeholder="Search posts..."
+                        value={searchTerm}
+                        onChange={handleSearch}
                         className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50"
                     />
                     <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />

@@ -5,16 +5,65 @@ import { blogPosts } from "@/lib/blog-data"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 
-export default function BlogPage() {
+export default async function BlogPage({
+    searchParams,
+}: {
+    searchParams: Promise<{ category?: string; search?: string }>
+}) {
+    const params = await searchParams
+    let filteredPosts = blogPosts
+
+    // Filter by category
+    if (params.category) {
+        filteredPosts = filteredPosts.filter((post) => post.category === params.category)
+    }
+
+    // Filter by search term
+    if (params.search) {
+        const searchLower = params.search.toLowerCase()
+        filteredPosts = filteredPosts.filter((post) =>
+            post.title.toLowerCase().includes(searchLower) ||
+            post.excerpt.toLowerCase().includes(searchLower) ||
+            post.category.toLowerCase().includes(searchLower)
+        )
+    }
+
     return (
         <div className="bg-slate-50 min-h-screen py-12">
             <Container>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
                     {/* Main Content */}
                     <div className="lg:col-span-2 space-y-8">
-                        <h1 className="text-3xl font-bold tracking-tight mb-8">Latest News & Articles</h1>
+                        <div>
+                            <div className="flex items-center justify-between mb-4">
+                                <h1 className="text-3xl font-bold tracking-tight">Latest News & Articles</h1>
+                                {(params.category || params.search) && (
+                                    <Button variant="outline" asChild>
+                                        <Link href="/blog">Reset Filters</Link>
+                                    </Button>
+                                )}
+                            </div>
+                            {params.category && (
+                                <p className="text-slate-600">
+                                    Showing posts in <span className="font-semibold text-primary">{params.category}</span>
+                                </p>
+                            )}
+                            {params.search && (
+                                <p className="text-slate-600">
+                                    Search results for <span className="font-semibold text-primary">"{params.search}"</span>
+                                </p>
+                            )}
+                        </div>
 
-                        {blogPosts.map((post) => (
+                        {filteredPosts.length === 0 ? (
+                            <div className="bg-white rounded-lg p-8 text-center">
+                                <p className="text-slate-600">No posts found in this category.</p>
+                                <Button variant="link" asChild className="mt-4">
+                                    <Link href="/blog">View all posts</Link>
+                                </Button>
+                            </div>
+                        ) : (
+                            filteredPosts.map((post) => (
                             <article key={post.id} className="bg-white rounded-lg overflow-hidden shadow-sm border flex flex-col md:flex-row">
                                 <div className="md:w-1/3 h-48 md:h-auto bg-slate-200 relative">
                                     <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${post.image})` }} />
@@ -42,7 +91,8 @@ export default function BlogPage() {
                                     </Button>
                                 </div>
                             </article>
-                        ))}
+                            ))
+                        )}
                     </div>
 
                     {/* Sidebar */}
