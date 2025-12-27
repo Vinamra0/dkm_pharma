@@ -8,6 +8,8 @@ import { blogPosts } from "@/lib/blog-data"
 import { motion } from "framer-motion"
 import { WhyChooseUsSection } from "@/components/home/WhyChooseUsSection"
 import { CompaniesSection } from "@/components/home/CompaniesSection"
+import { GallerySection } from "@/components/home/GallerySection"
+import { ProductShowcase } from "@/components/home/ProductShowcase"
 
 export default function Home() {
   return (
@@ -47,7 +49,7 @@ export default function Home() {
       <WhyChooseUsSection />
 
       {/* About Preview */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-slate-50">
         <Container>
           <div className="grid grid-cols-1 gap-16 md:grid-cols-2 items-center">
             <motion.div
@@ -111,8 +113,11 @@ export default function Home() {
       {/* Companies Section */}
       <CompaniesSection />
 
+      {/* Product Showcase */}
+      <ProductShowcase />
+
       {/* Latest Blog Posts */}
-      <section className="py-24 bg-slate-50">
+      <section className="py-24 bg-white">
         <Container>
           <div className="flex items-center justify-between mb-12">
             <div>
@@ -172,6 +177,9 @@ export default function Home() {
           </div>
         </Container>
       </section>
+
+      {/* Gallery Section */}
+      <GallerySection />
     </div>
   )
 }

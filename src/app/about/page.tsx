@@ -176,60 +176,6 @@ export default function AboutPage() {
                     </div>
                 </Container>
             </section>
-
-            {/* Life at DK Medi Group */}
-            <section className="py-16 bg-slate-50">
-                <Container>
-                    <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
-                        <div>
-                            <h4 className="text-sm font-bold tracking-widest text-[#2563eb] uppercase mb-2">
-                                Our Culture
-                            </h4>
-                            <div className="relative inline-block mb-4">
-                                <h2 className="text-3xl font-bold text-slate-900 mb-2">Life at DK Medi Group</h2>
-                                <motion.div
-                                    initial={{ scaleX: 0 }}
-                                    whileInView={{ scaleX: 1 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.8, ease: "circOut" }}
-                                    className="absolute bottom-0 left-0 w-2/3 h-1.5 bg-gradient-to-r from-blue-600 via-cyan-500 to-transparent rounded-full origin-left"
-                                />
-                            </div>
-                            <p className="text-slate-600 max-w-2xl mt-2">
-                                We&apos;re more than just a company; we&apos;re a community of passionate individuals working together to make a difference.
-                            </p>
-                        </div>
-                        <Link href="/gallery">
-                            <Button className="gap-2">
-                                View Full Gallery
-                                <ArrowRight className="h-4 w-4" />
-                            </Button>
-                        </Link>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {[
-                            { src: "/gallery/team_meeting.png", alt: "Team Meeting" },
-                            { src: "/gallery/modern_lab.png", alt: "Research Lab" },
-                            { src: "/gallery/team_collaboration.png", alt: "Team Collaboration" },
-                        ].map((item, index) => (
-                            <motion.div
-                                key={index}
-                                whileHover={{ y: -8 }}
-                                className="group rounded-3xl overflow-hidden shadow-sm shadow-blue-50/50 hover:shadow-[0_20px_40px_-15px_rgba(37,99,235,0.2)] transition-all duration-300"
-                            >
-                                <div className="h-72 overflow-hidden bg-slate-100">
-                                    <img
-                                        src={item.src}
-                                        alt={item.alt}
-                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                    />
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
-                </Container>
-            </section>
         </div>
     )
 }
