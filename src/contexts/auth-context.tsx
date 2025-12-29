@@ -17,12 +17,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Hardcoded credentials for demo - will be replaced with API call
-const DEMO_CREDENTIALS = {
-    email: 'admin@dkmedi.com',
-    password: 'admin123',
-    name: 'Admin User'
-};
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
@@ -31,40 +26,54 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Check for existing session on mount
     useEffect(() => {
-        const storedUser = localStorage.getItem('admin_user');
-        if (storedUser) {
+        (async () => {
             try {
-                setUser(JSON.parse(storedUser));
-            } catch (error) {
-                localStorage.removeItem('admin_user');
+                const token = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : null;
+                if (token) {
+                    const res = await fetch(`${API_BASE}/api/auth/me`, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    });
+                    if (res.ok) {
+                        const json = await res.json();
+                        const userData = { email: json.user.email, name: json.user.name };
+                        setUser(userData);
+                        localStorage.setItem('admin_user', JSON.stringify(userData));
+                        setIsLoading(false);
+                        return;
+                    }
+                }
+            } catch (e) {
+                // ignore
             }
-        }
-        setIsLoading(false);
+            // fallback: clear any stored session
+            if (typeof window !== 'undefined') {
+                localStorage.removeItem('admin_user');
+                localStorage.removeItem('admin_token');
+            }
+            setUser(null);
+            setIsLoading(false);
+        })();
     }, []);
 
     const login = async (email: string, password: string): Promise<boolean> => {
-        // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        // TODO: Replace with actual API call
-        // const response = await fetch('/api/auth/login', {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify({ email, password })
-        // });
-        // const data = await response.json();
-
-        if (email === DEMO_CREDENTIALS.email && password === DEMO_CREDENTIALS.password) {
-            const userData = {
-                email: DEMO_CREDENTIALS.email,
-                name: DEMO_CREDENTIALS.name
-            };
+        try {
+            const res = await fetch(`${API_BASE}/api/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+            });
+            const data = await res.json();
+            if (!res.ok) return false;
+            const userData = { email: data.user.email, name: data.user.name };
             setUser(userData);
-            localStorage.setItem('admin_user', JSON.stringify(userData));
+            if (typeof window !== 'undefined') {
+                localStorage.setItem('admin_user', JSON.stringify(userData));
+                if (data.token) localStorage.setItem('admin_token', data.token);
+            }
             return true;
+        } catch (e) {
+            return false;
         }
-
-        return false;
     };
 
     const logout = () => {

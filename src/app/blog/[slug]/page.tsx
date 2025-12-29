@@ -2,7 +2,6 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import { Container } from "@/components/ui/container"
 import { BlogSidebar } from "@/components/blog/BlogSidebar"
-import { blogPosts } from "@/lib/blog-data"
 import { Calendar, User, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -12,19 +11,21 @@ interface BlogPostPageProps {
     }>
 }
 
-export async function generateStaticParams() {
-    return blogPosts.map((post) => ({
-        slug: post.slug,
-    }))
-}
-
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
     const { slug } = await params
-    const post = blogPosts.find((p) => p.slug === slug)
-
-    if (!post) {
-        notFound()
+    const base = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001'
+    let post: any = null
+    try {
+        const res = await fetch(`${base}/api/blogs/${slug}`, { cache: 'no-store' })
+        if (res.ok) {
+            const json = await res.json()
+            if (json?.data) post = json.data
+        }
+    } catch (e) {
+        // ignore
     }
+
+    if (!post) notFound()
 
     return (
         <div className="bg-slate-50 min-h-screen py-12">

@@ -1,34 +1,10 @@
 import { Container } from "@/components/ui/container"
 import { Button } from "@/components/ui/button"
 import { Briefcase, MapPin, Clock } from "lucide-react"
+import { getPublicCareers } from '@/lib/career-data'
 
-export default function CareerPage() {
-    const jobs = [
-        {
-            id: 1,
-            title: "Medical Representative",
-            location: "Kathmandu",
-            type: "Full-time",
-            department: "Sales",
-            description: "We are looking for energetic and result-oriented Medical Representatives to join our sales team.",
-        },
-        {
-            id: 2,
-            title: "Quality Control Officer",
-            location: "Birgunj",
-            type: "Full-time",
-            department: "Production",
-            description: "Responsible for ensuring the quality of raw materials and finished products.",
-        },
-        {
-            id: 3,
-            title: "Digital Marketing Specialist",
-            location: "Kathmandu",
-            type: "Full-time",
-            department: "Marketing",
-            description: "Manage our online presence and digital marketing campaigns.",
-        },
-    ]
+export default async function CareerPage() {
+    const jobs = await getPublicCareers();
 
     return (
         <div className="bg-slate-50 min-h-screen py-12">

@@ -12,101 +12,76 @@ export interface AdminProduct {
     packageType: string
 }
 
-// Local storage key
-const STORAGE_KEY = 'admin_products';
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001';
 
-// Initialize with demo data
-const initialProducts: AdminProduct[] = [
-    {
-        id: "1",
-        name: "Amoxyclav-625",
-        packing: "10 x 6 Tablets",
-        image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&q=80&w=800",
-        composition: "Amoxycillin 500mg + Clavulanic Acid 125mg",
-        company: "DK Medi Group",
-        category: "Antibiotics",
-        tags: ["Antibiotic", "Prescription"],
-        generics: ["Amoxicillin", "Clavulanic Acid"],
-        subCategory: "Tablets",
-        packageType: "Blister"
-    },
-    {
-        id: "2",
-        name: "Paracetamol-500",
-        packing: "10 x 10 Tablets",
-        image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&q=80&w=800",
-        composition: "Paracetamol 500mg",
-        company: "DK Medi Group",
-        category: "Pain Relief",
-        tags: ["Pain Relief", "Fever", "OTC"],
-        generics: ["Paracetamol"],
-        subCategory: "Tablets",
-        packageType: "Strip"
-    },
-    {
-        id: "3",
-        name: "Vitamin D3 Injection",
-        packing: "1ml Ampoule",
-        image: "https://images.unsplash.com/photo-1579165466741-7f35a4755657?auto=format&fit=crop&q=80&w=800",
-        composition: "Cholecalciferol 600000 IU",
-        company: "DK Medi Group",
-        category: "Vitamins",
-        tags: ["Vitamin", "Injectable", "Prescription"],
-        generics: ["Vitamin D3", "Cholecalciferol"],
-        subCategory: "Injections",
-        packageType: "Vial"
-    },
-];
-
-// Get all products from localStorage
-export function getAllProducts(): AdminProduct[] {
-    if (typeof window === 'undefined') return initialProducts;
-
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (!stored) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(initialProducts));
-        return initialProducts;
+export async function getAllProducts(): Promise<AdminProduct[]> {
+    try {
+        const res = await fetch(`${API_BASE}/api/products`);
+        if (!res.ok) return [];
+        const json = await res.json();
+        const raw = (json.data || []) as any[];
+        const normalized = raw.map((p) => ({ ...(p || {}), id: String(p.id ?? p._id ?? ''), tags: p.tags ?? [], generics: p.generics ?? [] }));
+        return normalized as AdminProduct[];
+    } catch (e) {
+        return [];
     }
-    return JSON.parse(stored);
 }
 
 // Get single product by ID
-export function getProductById(id: string): AdminProduct | undefined {
-    const products = getAllProducts();
-    return products.find(product => product.id === id);
+export async function getProductById(id: string): Promise<AdminProduct | undefined> {
+    try {
+        const res = await fetch(`${API_BASE}/api/products/${id}`);
+        if (!res.ok) return undefined;
+        const json = await res.json();
+        const p = json.data as any;
+        if (!p) return undefined;
+        return { ...(p || {}), id: String(p.id ?? p._id ?? ''), tags: p.tags ?? [], generics: p.generics ?? [] } as AdminProduct | undefined;
+    } catch (e) {
+        const products = await getAllProducts();
+        return products.find(product => product.id === id);
+    }
 }
 
 // Add new product
-export function addProduct(product: Omit<AdminProduct, 'id'>): AdminProduct {
-    const products = getAllProducts();
-    const newProduct: AdminProduct = {
-        ...product,
-        id: Date.now().toString(),
-    };
-    products.unshift(newProduct);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
-    return newProduct;
+export async function addProduct(product: Omit<AdminProduct, 'id'>): Promise<AdminProduct> {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : null;
+    const res = await fetch(`${API_BASE}/api/products`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify(product),
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.message || 'Failed to add product');
+    return { ...(json.product || {}), id: String(json.product._id) } as AdminProduct;
 }
 
 // Update existing product
-export function updateProduct(id: string, updates: Partial<AdminProduct>): boolean {
-    const products = getAllProducts();
-    const index = products.findIndex(product => product.id === id);
-    if (index === -1) return false;
-
-    products[index] = { ...products[index], ...updates };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
-    return true;
+export async function updateProduct(id: string, updates: Partial<AdminProduct>): Promise<boolean> {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : null;
+    const res = await fetch(`${API_BASE}/api/products/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify(updates),
+    });
+    return res.ok;
 }
 
 // Delete product
-export function deleteProduct(id: string): boolean {
-    const products = getAllProducts();
-    const filtered = products.filter(product => product.id !== id);
-    if (filtered.length === products.length) return false;
-
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
-    return true;
+export async function deleteProduct(id: string): Promise<boolean> {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : null;
+    const res = await fetch(`${API_BASE}/api/products/${id}`, {
+        method: 'DELETE',
+        headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+    });
+    return res.ok;
 }
 
 // Category options

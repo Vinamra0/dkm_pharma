@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { Container } from "@/components/ui/container"
 import { BlogSidebar } from "@/components/blog/BlogSidebar"
-import { blogPosts } from "@/lib/blog-data"
+// fetch posts from backend only
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 
@@ -11,7 +11,30 @@ export default async function BlogPage({
     searchParams: Promise<{ category?: string; search?: string }>
 }) {
     const params = await searchParams
-    let filteredPosts = blogPosts
+    // Fetch posts from backend
+    let fetchedPosts: any[] = []
+    try {
+        const base = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001'
+        const res = await fetch(`${base}/api/blogs`, { cache: 'no-store' })
+        if (res.ok) {
+            const json = await res.json()
+            if (Array.isArray(json?.data)) fetchedPosts = json.data.map((b: any) => ({
+                id: b._id || b.id || b.slug,
+                title: b.title,
+                excerpt: b.excerpt || (b.content || '').slice(0, 150),
+                content: b.content,
+                author: b.author || 'DKM Team',
+                date: b.createdAt ? new Date(b.createdAt).toISOString().slice(0,10) : (b.date || ''),
+                image: b.image || '/assets/blog-default.jpg',
+                category: b.category || 'General',
+                slug: b.slug || (b._id || '')
+            }))
+        }
+    } catch (e) {
+        // on error, fetchedPosts remains empty
+    }
+
+    let filteredPosts = fetchedPosts
 
     // Filter by category
     if (params.category) {

@@ -29,6 +29,7 @@ export function ImageUpload({
 
     const handleFileSelect = async (file: File) => {
         // Validate file type
+        const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001';
         if (!UPLOAD_CONFIG.allowedTypes.includes(file.type as any)) {
             alert('Invalid file type. Only JPG, PNG, and WebP images are allowed.');
             return;
@@ -45,9 +46,7 @@ export function ImageUpload({
         try {
             // Create preview
             const reader = new FileReader();
-            reader.onload = (e) => {
-                setPreview(e.target?.result as string);
-            };
+            reader.onload = (e) => setPreview(e.target?.result as string);
             reader.readAsDataURL(file);
 
             // Upload file
@@ -55,7 +54,7 @@ export function ImageUpload({
             formData.append('file', file);
             formData.append('type', type);
 
-            const response = await fetch('/api/upload', {
+            const response = await fetch(`${API_BASE}/api/upload`, {
                 method: 'POST',
                 body: formData,
             });
@@ -63,15 +62,14 @@ export function ImageUpload({
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || 'Upload failed');
+                throw new Error(data.message || data.error || 'Upload failed');
             }
 
             // Update parent with the path
             onChange(data.path);
-        } catch (error) {
-            console.error('Upload error:', error);
-            alert(error instanceof Error ? error.message : 'Failed to upload image');
-            setPreview(null);
+        } catch (err) {
+            console.error('Upload error:', err);
+            alert(err instanceof Error ? err.message : 'Failed to upload image');
         } finally {
             setIsUploading(false);
         }

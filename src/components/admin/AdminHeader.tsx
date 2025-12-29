@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { LogOut, LayoutDashboard, FileText, Package } from 'lucide-react';
+import { LogOut, LayoutDashboard, FileText, Package, Briefcase } from 'lucide-react';
 import { useAuth } from '@/contexts/auth-context';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -12,6 +12,7 @@ const navigation = [
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
     { name: 'Blogs', href: '/admin/blogs', icon: FileText },
     { name: 'Products', href: '/admin/products', icon: Package },
+    { name: 'Careers', href: '/admin/careers', icon: Briefcase },
 ];
 
 export function AdminHeader() {

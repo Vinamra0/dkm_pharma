@@ -65,7 +65,7 @@ export default function AddProductPage() {
         setIsSubmitting(true);
 
         try {
-            addProduct(formData);
+            await addProduct(formData);
             router.push('/admin/products');
         } catch (error) {
             alert('Failed to add product');

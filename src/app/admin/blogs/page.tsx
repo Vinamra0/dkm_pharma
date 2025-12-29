@@ -20,15 +20,16 @@ export default function BlogsPage() {
         loadBlogs();
     }, []);
 
-    const loadBlogs = () => {
-        setBlogs(getAllBlogs());
+    const loadBlogs = async () => {
+        const items = await getAllBlogs();
+        setBlogs(items);
         setIsLoading(false);
     };
 
-    const handleDelete = (id: string) => {
+    const handleDelete = async (id: string) => {
         if (confirm('Are you sure you want to delete this blog post?')) {
-            deleteBlog(id);
-            loadBlogs();
+            await deleteBlog(id);
+            await loadBlogs();
         }
     };
 

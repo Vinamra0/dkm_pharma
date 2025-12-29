@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
-import { products } from "@/lib/product-data";
+// no local fallback; fetch products from backend
 import { Button } from "@/components/ui/button";
 import { Search, Filter } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -11,13 +11,51 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function ProductsPage() {
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [searchQuery, setSearchQuery] = useState("");
+    const [products, setProducts] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        let mounted = true;
+        async function fetchProducts() {
+            setLoading(true);
+            try {
+                const base = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001';
+                const res = await fetch(`${base}/api/products`, { cache: 'no-store' });
+                if (res.ok) {
+                    const json = await res.json();
+                    if (Array.isArray(json?.data) && mounted) {
+                        // map backend shape to frontend expected shape
+                        const mapped = json.data.map((p: any) => ({
+                            id: p._id || p.id,
+                            name: p.name,
+                            category: p.category || 'General',
+                            description: p.composition || p.description || '',
+                            image: p.image || '/assets/products/sample-paracetamol.jpg',
+                            specifications: {
+                                composition: p.composition || '',
+                                dosageForm: p.dosageForm || '',
+                                packaging: p.packing || p.packageType || ''
+                            }
+                        }));
+                        setProducts(mapped);
+                    }
+                }
+            } catch (e) {
+                // on error keep products empty
+            } finally {
+                if (mounted) setLoading(false);
+            }
+        }
+        fetchProducts();
+        return () => { mounted = false };
+    }, []);
 
     const categories = ["All", ...Array.from(new Set(products.map((p) => p.category)))];
 
     const filteredProducts = products.filter((product) => {
         const matchesCategory = selectedCategory === "All" || product.category === selectedCategory;
         const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            product.description.toLowerCase().includes(searchQuery.toLowerCase());
+            (product.description || '').toLowerCase().includes(searchQuery.toLowerCase());
         return matchesCategory && matchesSearch;
     });
 
@@ -68,7 +106,9 @@ export default function ProductsPage() {
                 {/* Products Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     <AnimatePresence mode="popLayout">
-                        {filteredProducts.length > 0 ? (
+                        {loading ? (
+                            <div className="col-span-full text-center py-20">Loading...</div>
+                        ) : filteredProducts.length > 0 ? (
                             filteredProducts.map((product) => (
                                 <motion.div
                                     layout

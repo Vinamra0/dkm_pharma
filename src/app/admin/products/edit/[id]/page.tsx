@@ -38,24 +38,26 @@ export default function EditProductPage() {
     const [errors, setErrors] = useState<Record<string, string>>({});
 
     useEffect(() => {
-        const product = getProductById(productId);
-        if (product) {
-            setFormData({
-                name: product.name,
-                packing: product.packing,
-                image: product.image,
-                composition: product.composition,
-                company: product.company,
-                category: product.category,
-                tags: product.tags,
-                generics: product.generics,
-                subCategory: product.subCategory,
-                packageType: product.packageType,
-            });
-        } else {
-            router.push('/admin/products');
-        }
-        setIsLoading(false);
+        (async () => {
+            const product = await getProductById(productId);
+            if (product) {
+                setFormData({
+                    name: product.name,
+                    packing: product.packing,
+                    image: product.image,
+                    composition: product.composition,
+                    company: product.company,
+                    category: product.category,
+                    tags: product.tags,
+                    generics: product.generics,
+                    subCategory: product.subCategory,
+                    packageType: product.packageType,
+                });
+            } else {
+                router.push('/admin/products');
+            }
+            setIsLoading(false);
+        })();
     }, [productId, router]);
 
     const handleChange = (field: string, value: string | string[]) => {
@@ -90,7 +92,7 @@ export default function EditProductPage() {
         setIsSubmitting(true);
 
         try {
-            updateProduct(productId, formData);
+            await updateProduct(productId, formData);
             router.push('/admin/products');
         } catch (error) {
             alert('Failed to update product');

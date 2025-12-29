@@ -44,22 +44,24 @@ export default function EditBlogPage() {
     const [errors, setErrors] = useState<Record<string, string>>({});
 
     useEffect(() => {
-        const blog = getBlogById(blogId);
-        if (blog) {
-            setFormData({
-                title: blog.title,
-                excerpt: blog.excerpt,
-                content: blog.content,
-                author: blog.author,
-                date: blog.date,
-                image: blog.image,
-                category: blog.category,
-                slug: blog.slug,
-            });
-        } else {
-            router.push('/admin/blogs');
-        }
-        setIsLoading(false);
+        (async () => {
+            const blog = await getBlogById(blogId);
+            if (blog) {
+                setFormData({
+                    title: blog.title,
+                    excerpt: blog.excerpt,
+                    content: blog.content,
+                    author: blog.author,
+                    date: blog.date,
+                    image: blog.image,
+                    category: blog.category,
+                    slug: blog.slug,
+                });
+            } else {
+                router.push('/admin/blogs');
+            }
+            setIsLoading(false);
+        })();
     }, [blogId, router]);
 
     const handleChange = (field: string, value: string) => {
@@ -91,7 +93,7 @@ export default function EditBlogPage() {
         setIsSubmitting(true);
 
         try {
-            updateBlog(blogId, formData);
+            await updateBlog(blogId, formData);
             router.push('/admin/blogs');
         } catch (error) {
             alert('Failed to update blog post');

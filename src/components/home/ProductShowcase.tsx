@@ -5,9 +5,38 @@ import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
 import { ArrowRight } from "lucide-react"
 import Link from "next/link"
-import { products } from "@/lib/product-data"
+import { useState, useEffect } from "react"
 
 export function ProductShowcase() {
+    const [products, setProducts] = useState<any[]>([])
+
+    useEffect(() => {
+        let mounted = true
+        async function load() {
+            try {
+                const base = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001'
+                const res = await fetch(`${base}/api/products`, { cache: 'no-store' })
+                if (res.ok) {
+                    const json = await res.json()
+                    if (Array.isArray(json?.data) && mounted) {
+                        const mapped = json.data.map((p: any) => ({
+                            id: p._id || p.id,
+                            name: p.name,
+                            category: p.category || 'General',
+                            description: p.composition || p.description || '',
+                            image: p.image || '/assets/products/sample-paracetamol.svg'
+                        }))
+                        setProducts(mapped)
+                    }
+                }
+            } catch (e) {
+                // on error keep products empty
+            }
+        }
+        load()
+        return () => { mounted = false }
+    }, [])
+
     // Get first 4 products for showcase
     const featuredProducts = products.slice(0, 4)
 

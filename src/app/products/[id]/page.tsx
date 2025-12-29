@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import { Container } from "@/components/ui/container"
-import { products } from "@/lib/product-data"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, CheckCircle } from "lucide-react"
 
@@ -11,18 +10,30 @@ interface ProductPageProps {
     }>
 }
 
-export async function generateStaticParams() {
-    return products.map((product) => ({
-        id: product.id,
-    }))
-}
-
 export default async function ProductPage({ params }: ProductPageProps) {
     const { id } = await params
-    const product = products.find((p) => p.id === id)
+    const base = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001'
+    let product: any = null
+    try {
+        const res = await fetch(`${base}/api/products/${id}`, { cache: 'no-store' })
+        if (res.ok) {
+            const json = await res.json()
+            if (json?.data) product = json.data
+        }
+    } catch (e) {
+        // ignore
+    }
+    if (!product) notFound()
 
-    if (!product) {
-        notFound()
+    // Ensure the product always has a `specifications` object expected by the UI
+    product = {
+        ...product,
+        specifications: product.specifications || {
+            composition: product.composition || '',
+            dosageForm: product.dosageForm || '',
+            packaging: product.packing || product.packageType || ''
+        },
+        image: product.image || '/assets/products/sample-paracetamol.svg'
     }
 
     return (

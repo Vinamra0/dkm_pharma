@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { blogPosts } from "@/lib/blog-data"
+// no local fallback; always fetch from backend
 import { Search } from "lucide-react"
 import { useState, useEffect } from "react"
 
@@ -10,6 +10,7 @@ export function BlogSidebar() {
     const router = useRouter()
     const searchParams = useSearchParams()
     const [searchTerm, setSearchTerm] = useState("")
+    const [posts, setPosts] = useState<any[]>([])
 
     useEffect(() => {
         const search = searchParams.get("search")
@@ -18,10 +19,40 @@ export function BlogSidebar() {
         }
     }, [searchParams])
 
+    useEffect(() => {
+        let mounted = true
+        async function load() {
+            try {
+                const base = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001'
+                const res = await fetch(`${base}/api/blogs`, { cache: 'no-store' })
+                if (res.ok) {
+                    const json = await res.json()
+                    if (Array.isArray(json?.data) && mounted) {
+                        const mapped = json.data.map((b: any) => ({
+                            id: b._id || b.id || b.slug,
+                            title: b.title,
+                            excerpt: b.excerpt || (b.content || '').slice(0,150),
+                            author: b.author || 'DKM Team',
+                            date: b.createdAt ? new Date(b.createdAt).toISOString().slice(0,10) : (b.date || ''),
+                            image: b.image || '/assets/blog-default.jpg',
+                            category: b.category || 'General',
+                            slug: b.slug || (b._id || '')
+                        }))
+                        setPosts(mapped)
+                    }
+                }
+            } catch (e) {
+                // on error, keep posts empty so UI shows fallback message
+            }
+        }
+        load()
+        return () => { mounted = false }
+    }, [])
+
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value
         setSearchTerm(value)
-        
+
         if (value.trim()) {
             router.push(`/blog?search=${encodeURIComponent(value)}`)
         } else {
@@ -29,8 +60,8 @@ export function BlogSidebar() {
         }
     }
 
-    const categories = Array.from(new Set(blogPosts.map((post) => post.category)))
-    const recentPosts = [...blogPosts]
+    const categories = Array.from(new Set(posts.map((post) => post.category)))
+    const recentPosts = [...posts]
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
         .slice(0, 5)
 
@@ -63,7 +94,7 @@ export function BlogSidebar() {
                             >
                                 <span>{category}</span>
                                 <span className="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded-full">
-                                    {blogPosts.filter((p) => p.category === category).length}
+                                    {posts.filter((p) => p.category === category).length}
                                 </span>
                             </Link>
                         </li>

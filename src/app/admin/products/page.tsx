@@ -20,15 +20,16 @@ export default function ProductsPage() {
         loadProducts();
     }, []);
 
-    const loadProducts = () => {
-        setProducts(getAllProducts());
+    const loadProducts = async () => {
+        const items = await getAllProducts();
+        setProducts(items);
         setIsLoading(false);
     };
 
-    const handleDelete = (id: string) => {
+    const handleDelete = async (id: string) => {
         if (confirm('Are you sure you want to delete this product?')) {
-            deleteProduct(id);
-            loadProducts();
+            await deleteProduct(id);
+            await loadProducts();
         }
     };
 
@@ -36,7 +37,7 @@ export default function ProductsPage() {
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+        (product.tags || []).some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
     );
 
     return (
@@ -148,7 +149,7 @@ export default function ProductsPage() {
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <div className="flex flex-wrap gap-1">
-                                                        {product.tags.slice(0, 2).map((tag, i) => (
+                                                        {(product.tags || []).slice(0, 2).map((tag, i) => (
                                                             <span
                                                                 key={i}
                                                                 className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full"
@@ -156,7 +157,7 @@ export default function ProductsPage() {
                                                                 {tag}
                                                             </span>
                                                         ))}
-                                                        {product.tags.length > 2 && (
+                                                        {(product.tags || []).length > 2 && (
                                                             <span className="px-2 py-0.5 bg-slate-100 text-slate-600 text-xs rounded-full">
                                                                 +{product.tags.length - 2}
                                                             </span>
@@ -166,19 +167,17 @@ export default function ProductsPage() {
                                                 <td className="px-6 py-4 text-right">
                                                     <div className="flex justify-end gap-2">
                                                         <Link href={`/admin/products/edit/${product.id}`}>
-                                                            <Button variant="outline" size="sm" className="gap-1">
-                                                                <Edit className="w-3 h-3" />
-                                                                Edit
+                                                            <Button variant="outline" size="icon" className="p-0" aria-label="Edit product">
+                                                                <Edit className="w-4 h-4" />
                                                             </Button>
                                                         </Link>
                                                         <Button
-                                                            variant="destructive"
-                                                            size="sm"
+                                                            size="icon"
                                                             onClick={() => handleDelete(product.id)}
-                                                            className="gap-1"
+                                                            className="p-0 bg-red-600 hover:bg-red-700 text-white"
+                                                            aria-label="Delete product"
                                                         >
-                                                            <Trash2 className="w-3 h-3" />
-                                                            Delete
+                                                            <Trash2 className="w-4 h-4" />
                                                         </Button>
                                                     </div>
                                                 </td>
