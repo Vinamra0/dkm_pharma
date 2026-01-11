@@ -1,5 +1,6 @@
 import { Container } from "@/components/ui/container"
 import { Button } from "@/components/ui/button"
+import ApplyButton from "@/components/career/ApplyButton"
 import { Briefcase, MapPin, Clock } from "lucide-react"
 import { getPublicCareers } from '@/lib/career-data'
 
@@ -37,7 +38,7 @@ export default async function CareerPage() {
                                 </div>
                                 <p className="text-slate-600">{job.description}</p>
                             </div>
-                            <Button>Apply Now</Button>
+                            <ApplyButton job={job} />
                         </div>
                     ))}
                 </div>

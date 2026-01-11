@@ -7,23 +7,33 @@ export const UPLOAD_CONFIG = {
     directories: {
         products: '/assets/products',
         blogs: '/assets/blogs',
+        applications: '/assets/applications',
     },
 
-    // Allowed file types
-    allowedTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
-    allowedExtensions: ['.jpg', '.jpeg', '.png', '.webp'],
+    // Allowed image file types
+    allowedImageTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
+    allowedImageExtensions: ['.jpg', '.jpeg', '.png', '.webp'],
 
-    // Max file size (5MB)
-    maxFileSize: 5 * 1024 * 1024,
+    // Allowed CV / document file types
+    allowedCvTypes: [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    ],
+    allowedCvExtensions: ['.pdf', '.doc', '.docx'],
+
+    // Max file sizes
+    maxImageFileSize: 5 * 1024 * 1024, // 5MB
+    maxCvFileSize: 10 * 1024 * 1024, // 10MB
 
     // File naming - uses UUID for guaranteed uniqueness
-    generateFileName: (originalName: string, type: 'products' | 'blogs') => {
+    generateFileName: (originalName: string, type: 'products' | 'blogs' | 'applications') => {
         // Generate a unique ID using crypto.randomUUID() for guaranteed uniqueness
         const uniqueId = crypto.randomUUID().split('-')[0]; // Use first segment (8 chars)
         const timestamp = Date.now();
 
         // Extract file extension
-        const ext = originalName.split('.').pop()?.toLowerCase() || 'jpg';
+        const ext = originalName.split('.').pop()?.toLowerCase() || 'dat';
 
         // Sanitize the base name (without extension)
         const baseName = originalName.substring(0, originalName.lastIndexOf('.')) || originalName;
@@ -38,7 +48,7 @@ export const UPLOAD_CONFIG = {
     },
 
     // Get full path for storage
-    getStoragePath: (fileName: string, type: 'products' | 'blogs') => {
+    getStoragePath: (fileName: string, type: 'products' | 'blogs' | 'applications') => {
         return `${UPLOAD_CONFIG.directories[type]}/${fileName}`;
     },
 } as const;

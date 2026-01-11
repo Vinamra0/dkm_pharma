@@ -98,11 +98,17 @@ export default function BlogsPage() {
                                 >
                                     <Card className="card-hover h-full flex flex-col">
                                         <div className="relative h-48 overflow-hidden rounded-t-xl">
-                                            <img
-                                                src={blog.image}
-                                                alt={blog.title}
-                                                className="w-full h-full object-cover"
-                                            />
+                                            {blog.image ? (
+                                                <img
+                                                    src={blog.image}
+                                                    alt={blog.title}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full bg-slate-100 flex items-center justify-center text-slate-400">
+                                                    No image
+                                                </div>
+                                            )}
                                             <div className="absolute top-3 right-3">
                                                 <span className="px-3 py-1 bg-blue-600 text-white text-xs font-medium rounded-full">
                                                     {blog.category}
