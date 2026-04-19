@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Lock, Mail, AlertCircle } from 'lucide-react';
+import { Lock, AlertCircle } from 'lucide-react';
 import { useAuth } from '@/contexts/auth-context';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/button';
@@ -28,7 +28,7 @@ export default function LoginPage() {
             } else {
                 setError('Invalid email or password');
             }
-        } catch (err) {
+        } catch {
             setError('An error occurred. Please try again.');
         } finally {
             setIsLoading(false);
@@ -79,7 +79,7 @@ export default function LoginPage() {
                         <Input
                             label="Email"
                             type="email"
-                            placeholder="admin@dkmedi.com"
+                            placeholder="admin@example.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
@@ -116,7 +116,7 @@ export default function LoginPage() {
 
                     <div className="mt-6 pt-6 border-t border-slate-200">
                         <p className="text-sm text-slate-600 text-center">
-                            Demo credentials: <span className="font-medium">admin@dkmedi.com</span> / <span className="font-medium">admin123</span>
+                            Local credentials: <span className="font-medium">admin@example.com</span> / <span className="font-medium">change-this-local-password</span>
                         </p>
                     </div>
                 </motion.div>

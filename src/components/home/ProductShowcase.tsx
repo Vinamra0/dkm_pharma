@@ -8,7 +8,7 @@ import Link from "next/link"
 import { useState, useEffect } from "react"
 
 export function ProductShowcase() {
-    const [products, setProducts] = useState<any[]>([])
+    const [products, setProducts] = useState<Array<{ id: string; name: string; category: string; description: string; image: string }>>([])
 
     useEffect(() => {
         let mounted = true
@@ -19,9 +19,9 @@ export function ProductShowcase() {
                 if (res.ok) {
                     const json = await res.json()
                     if (Array.isArray(json?.data) && mounted) {
-                        const mapped = json.data.map((p: any) => ({
+                        const mapped = json.data.map((p: { _id?: string; id?: string; name?: string; category?: string; composition?: string; description?: string; image?: string }) => ({
                             id: p._id || p.id,
-                            name: p.name,
+                            name: p.name || 'Untitled',
                             category: p.category || 'General',
                             description: p.composition || p.description || '',
                             image: p.image || '/assets/products/sample-paracetamol.svg'
@@ -29,7 +29,7 @@ export function ProductShowcase() {
                         setProducts(mapped)
                     }
                 }
-            } catch (e) {
+            } catch {
                 // on error keep products empty
             }
         }
@@ -46,10 +46,10 @@ export function ProductShowcase() {
                 <div className="flex items-center justify-between mb-12">
                     <div>
                         <h4 className="text-sm font-bold tracking-widest text-blue-600 uppercase mb-2">
-                            Our Range
+                            Key Product Segments
                         </h4>
                         <div className="relative inline-block mb-4">
-                            <h2 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">Featured Products</h2>
+                            <h2 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">Comprehensive Healthcare Solutions</h2>
                             <motion.div
                                 initial={{ scaleX: 0 }}
                                 whileInView={{ scaleX: 1 }}
@@ -58,7 +58,7 @@ export function ProductShowcase() {
                                 className="absolute bottom-0 left-0 w-2/3 h-1.5 bg-gradient-to-r from-blue-600 via-cyan-500 to-transparent rounded-full origin-left"
                             />
                         </div>
-                        <p className="text-slate-600 mt-2">High-quality pharmaceutical solutions for better health.</p>
+                        <p className="text-slate-600 mt-2">IV fluids, oncology and critical care medicines, dialysis tools, surgical consumables, and clinical nutrition solutions.</p>
                     </div>
                     <Button variant="ghost" className="text-blue-600 hover:text-blue-700 hover:bg-blue-50" asChild>
                         <Link href="/products">View All Products <ArrowRight className="ml-2 h-4 w-4" /></Link>

@@ -4,20 +4,20 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-    "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+    "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
     {
         variants: {
             variant: {
-                default: "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300",
+                default: "bg-gradient-to-r from-blue-700 via-blue-600 to-cyan-500 text-white shadow-[0_12px_24px_-12px_rgba(37,99,235,0.85)] hover:shadow-[0_16px_30px_-14px_rgba(14,116,144,0.9)] hover:-translate-y-0.5",
                 destructive:
                     "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm hover:shadow-md",
                 outline:
-                    "border border-input bg-background hover:bg-accent hover:text-accent-foreground shadow-sm hover:shadow-md",
+                    "border border-slate-200/90 bg-white/85 hover:bg-white hover:text-blue-700 shadow-sm hover:shadow-md",
                 secondary:
-                    "bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm hover:shadow-md",
+                    "bg-slate-100/90 text-secondary-foreground hover:bg-slate-100 shadow-sm hover:shadow-md",
                 ghost: "hover:bg-accent hover:text-accent-foreground",
                 link: "text-primary underline-offset-4 hover:underline",
-                premium: "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border-0",
+                premium: "bg-gradient-to-r from-cyan-500 via-blue-600 to-blue-700 text-white shadow-[0_16px_34px_-16px_rgba(14,116,144,0.95)] hover:shadow-[0_22px_38px_-18px_rgba(37,99,235,0.95)] hover:-translate-y-1 border-0",
             },
             size: {
                 default: "h-10 px-4 py-2",

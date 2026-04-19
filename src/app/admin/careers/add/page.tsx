@@ -22,9 +22,9 @@ export default function AddCareerPage() {
         if (!form.title.trim()) return alert('Title required');
         setIsSubmitting(true);
         try {
-            await addCareer(form as any);
+            await addCareer(form);
             router.push('/admin/careers');
-        } catch (err) {
+        } catch {
             alert('Failed to add job');
         } finally { setIsSubmitting(false); }
     };

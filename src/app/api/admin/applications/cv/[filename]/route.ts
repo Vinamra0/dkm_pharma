@@ -11,12 +11,14 @@ function checkAuth(req: NextRequest) {
     return h.replace('Bearer ', '') === adminToken
 }
 
-export async function GET(request: NextRequest, context: { params: any }) {
+type RouteContext = {
+    params: Promise<{ filename: string }>
+}
+
+export async function GET(request: NextRequest, context: RouteContext) {
     try {
         if (!checkAuth(request)) return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 })
-        // In some Next versions `context.params` may be a Promise — unwrap safely.
-        const params = context.params ? await context.params : {}
-        const filename = params?.filename
+        const { filename } = await context.params
         if (!filename || typeof filename !== 'string' || filename.includes('..') || filename.includes('/')) {
             return NextResponse.json({ success: false, message: 'Invalid filename' }, { status: 400 })
         }

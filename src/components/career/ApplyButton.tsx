@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import ApplicationForm from "@/components/forms/ApplicationForm"
 
-export default function ApplyButton({ job }: { job: any }) {
+export default function ApplyButton({ job }: { job: { id?: string; title?: string } }) {
     const [open, setOpen] = useState(false)
 
     return (
@@ -16,10 +16,10 @@ export default function ApplyButton({ job }: { job: any }) {
                     <div className="absolute inset-0 bg-black/60" onClick={() => setOpen(false)} />
                     <div className="relative w-full max-w-3xl bg-white rounded-lg shadow-lg p-6 z-10">
                         <div className="flex justify-between items-center mb-4">
-                            <h3 className="text-lg font-semibold">Apply for: {job.title}</h3>
+                            <h3 className="text-lg font-semibold">Apply for: {job.title || 'Open Position'}</h3>
                             <Button variant="ghost" onClick={() => setOpen(false)}>Close</Button>
                         </div>
-                        <ApplicationForm jobId={job.id} jobTitle={job.title} onClose={() => setOpen(false)} />
+                        <ApplicationForm jobId={job.id} onClose={() => setOpen(false)} />
                     </div>
                 </div>
             )}

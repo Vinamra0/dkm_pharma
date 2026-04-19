@@ -4,7 +4,7 @@ import { ProtectedRoute } from '@/components/admin/ProtectedRoute';
 import { AdminHeader } from '@/components/admin/AdminHeader';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { FileText, Package, TrendingUp } from 'lucide-react';
+import { FileText, Package } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/button';
 
@@ -34,7 +34,7 @@ const quickActions = [
 
 export default function AdminDashboard() {
     const [stats, setStats] = useState(defaultStats);
-    const [activities, setActivities] = useState<any[]>([]);
+    const [activities, setActivities] = useState<Array<{ id: string; type: 'blog' | 'product'; title: string; date: string | null; href: string }>>([]);
 
     useEffect(() => {
         let mounted = true;
@@ -61,7 +61,7 @@ export default function AdminDashboard() {
                         { ...defaultStats[1], value: String(prodCount) }
                     ]);
                 }
-            } catch (e) {
+            } catch {
                 // ignore, keep defaults
             }
         }
@@ -74,16 +74,16 @@ export default function AdminDashboard() {
                     fetch(`${base}/api/blogs`, { cache: 'no-store' }),
                     fetch(`${base}/api/products`, { cache: 'no-store' }),
                 ]);
-                const items: any[] = [];
+                const items: Array<{ id: string; type: 'blog' | 'product'; title: string; date: string | null; href: string }> = [];
                 if (blogsRes.ok) {
                     const j = await blogsRes.json();
                     if (Array.isArray(j?.data)) {
-                        j.data.forEach((b: any) => {
+                        j.data.forEach((b: { id?: string; _id?: string; title?: string; updatedAt?: string; createdAt?: string; date?: string }) => {
                             const id = String(b.id ?? b._id ?? '');
                             items.push({
                                 id,
                                 type: 'blog',
-                                title: b.title,
+                                title: b.title || 'Untitled',
                                 date: b.updatedAt || b.createdAt || b.date || null,
                                 href: `/admin/blogs/edit/${id}`,
                             });
@@ -93,12 +93,12 @@ export default function AdminDashboard() {
                 if (prodsRes.ok) {
                     const j = await prodsRes.json();
                     if (Array.isArray(j?.data)) {
-                        j.data.forEach((p: any) => {
+                        j.data.forEach((p: { id?: string; _id?: string; name?: string; updatedAt?: string; createdAt?: string }) => {
                             const id = String(p.id ?? p._id ?? '');
                             items.push({
                                 id,
                                 type: 'product',
-                                title: p.name,
+                                title: p.name || 'Untitled',
                                 date: p.updatedAt || p.createdAt || null,
                                 href: `/admin/products/edit/${id}`,
                             });
@@ -107,11 +107,11 @@ export default function AdminDashboard() {
                 }
                 // sort by date desc and take latest 6
                 const normalized = items
-                    .filter(a => a.date)
+                    .filter((a): a is typeof a & { date: string } => Boolean(a.date))
                     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
                     .slice(0, 6);
                 if (mounted) setActivities(normalized);
-            } catch (e) {
+            } catch {
                 // ignore
             }
         }
@@ -132,7 +132,7 @@ export default function AdminDashboard() {
                         className="mb-8"
                     >
                         <h1 className="text-3xl font-bold text-midnight mb-2">Welcome back!</h1>
-                        <p className="text-slate-600">Here's what's happening with your content today.</p>
+                        <p className="text-slate-600">Here&apos;s what&apos;s happening with your content today.</p>
                     </motion.div>
 
                     {/* Stats Grid */}

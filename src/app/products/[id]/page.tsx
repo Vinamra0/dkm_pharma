@@ -13,25 +13,39 @@ interface ProductPageProps {
 export default async function ProductPage({ params }: ProductPageProps) {
     const { id } = await params
     const base = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001'
-    let product: any = null
+    let product: {
+        category: string
+        name: string
+        description: string
+        image: string
+        composition?: string
+        dosageForm?: string
+        packing?: string
+        packageType?: string
+        specifications?: {
+            composition: string
+            dosageForm: string
+            packaging: string
+        }
+    } | null = null
     try {
         const res = await fetch(`${base}/api/products/${id}`, { cache: 'no-store' })
         if (res.ok) {
             const json = await res.json()
             if (json?.data) product = json.data
         }
-    } catch (e) {
+    } catch {
         // ignore
     }
     if (!product) notFound()
 
     // Ensure the product always has a `specifications` object expected by the UI
-    product = {
+    const normalizedProduct = {
         ...product,
         specifications: product.specifications || {
-            composition: product.composition || '',
-            dosageForm: product.dosageForm || '',
-            packaging: product.packing || product.packageType || ''
+            composition: product.composition || product.description || 'Not provided',
+            dosageForm: product.dosageForm || 'Not provided',
+            packaging: product.packing || product.packageType || 'Not provided'
         },
         image: product.image || '/assets/products/sample-paracetamol.svg'
     }
@@ -47,7 +61,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
                     <div className="rounded-xl overflow-hidden bg-slate-100 border h-[400px] md:h-[500px] relative">
-                        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${product.image})` }} />
+                        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${normalizedProduct.image})` }} />
                     </div>
 
                     <div className="space-y-8">
@@ -64,15 +78,15 @@ export default async function ProductPage({ params }: ProductPageProps) {
                             <dl className="space-y-4">
                                 <div className="grid grid-cols-3 gap-4">
                                     <dt className="text-sm font-medium text-slate-500">Composition</dt>
-                                    <dd className="text-sm text-slate-900 col-span-2">{product.specifications.composition}</dd>
+                                    <dd className="text-sm text-slate-900 col-span-2">{normalizedProduct.specifications.composition}</dd>
                                 </div>
                                 <div className="grid grid-cols-3 gap-4">
                                     <dt className="text-sm font-medium text-slate-500">Dosage Form</dt>
-                                    <dd className="text-sm text-slate-900 col-span-2">{product.specifications.dosageForm}</dd>
+                                    <dd className="text-sm text-slate-900 col-span-2">{normalizedProduct.specifications.dosageForm}</dd>
                                 </div>
                                 <div className="grid grid-cols-3 gap-4">
                                     <dt className="text-sm font-medium text-slate-500">Packaging</dt>
-                                    <dd className="text-sm text-slate-900 col-span-2">{product.specifications.packaging}</dd>
+                                    <dd className="text-sm text-slate-900 col-span-2">{normalizedProduct.specifications.packaging}</dd>
                                 </div>
                             </dl>
                         </div>

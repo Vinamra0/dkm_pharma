@@ -18,10 +18,10 @@ export async function getAllBlogs(): Promise<AdminBlogPost[]> {
         const res = await fetch(`${API_BASE}/api/blogs`);
         if (!res.ok) return [];
         const json = await res.json();
-        const raw = (json.data || []) as any[];
+        const raw = (json.data || []) as Array<Record<string, unknown>>;
         const normalized = raw.map((b) => ({ ...(b || {}), id: String(b.id ?? b._id ?? '') }));
         return normalized as AdminBlogPost[];
-    } catch (e) {
+    } catch {
         return [];
     }
 }
@@ -32,10 +32,10 @@ export async function getBlogById(id: string): Promise<AdminBlogPost | undefined
         const res = await fetch(`${API_BASE}/api/blogs/${id}`);
         if (!res.ok) return undefined;
         const json = await res.json();
-        const b = json.data as any;
+        const b = json.data as Record<string, unknown> | undefined;
         if (!b) return undefined;
         return { ...(b || {}), id: String(b.id ?? b._id ?? '') } as AdminBlogPost | undefined;
-    } catch (e) {
+    } catch {
         const blogs = await getAllBlogs();
         return blogs.find(blog => blog.id === id);
     }

@@ -5,20 +5,28 @@ import Link from 'next/link';
 import { AdminHeader } from '@/components/admin/AdminHeader';
 import { ProtectedRoute } from '@/components/admin/ProtectedRoute';
 import { Button } from '@/components/ui/button';
-import { getAllCareers, deleteCareer } from '@/lib/admin-career-data';
+import { getAllCareers, deleteCareer, type AdminCareer } from '@/lib/admin-career-data';
 import { Edit, Trash2 } from 'lucide-react';
 
 export default function CareersAdminPage() {
-    const [careers, setCareers] = useState<any[]>([]);
+    const [careers, setCareers] = useState<AdminCareer[]>([]);
 
-    useEffect(() => {
-        load();
-    }, []);
-
-    async function load() {
+    const load = async () => {
         const list = await getAllCareers();
         setCareers(list);
     }
+
+    useEffect(() => {
+        let mounted = true;
+        (async () => {
+            const list = await getAllCareers();
+            if (!mounted) return;
+            setCareers(list);
+        })();
+        return () => {
+            mounted = false;
+        };
+    }, []);
 
     async function handleDelete(id: string) {
         if (!confirm('Delete this job posting?')) return;

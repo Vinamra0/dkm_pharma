@@ -2,10 +2,9 @@
 
 import * as React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Menu, X } from "lucide-react"
 import { Container } from "@/components/ui/container"
-import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
 
 const navigation = [
     { name: "Home", href: "/" },
@@ -20,15 +19,19 @@ export function Navbar() {
     const [isOpen, setIsOpen] = React.useState(false)
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/80 backdrop-blur-md supports-[backdrop-filter]:bg-white/60 shadow-sm transition-all duration-300">
+        <header className="sticky top-0 z-50 w-full border-b border-white/70 bg-white/76 backdrop-blur-xl supports-[backdrop-filter]:bg-white/64 shadow-[0_12px_34px_-24px_rgba(11,60,93,0.45)] transition-all duration-300">
             <Container>
-                <div className="flex h-16 items-center justify-between">
+                <div className="flex h-20 items-center justify-between">
                     <div className="flex items-center gap-2">
                         <Link href="/" className="flex items-center space-x-2 group">
-                            <div className="h-8 w-8 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-lg flex items-center justify-center text-white font-bold shadow-lg group-hover:shadow-blue-500/50 transition-all duration-300">
-                                DK
-                            </div>
-                            <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700">DK Medi Group</span>
+                            <Image
+                                src="/assets/branding/dkm-logo-clean.png"
+                                alt="DKM Group"
+                                width={280}
+                                height={80}
+                                className="h-16 w-auto object-contain"
+                                priority
+                            />
                         </Link>
                     </div>
 
@@ -38,10 +41,10 @@ export function Navbar() {
                             <Link
                                 key={item.name}
                                 href={item.href}
-                                className="text-sm font-medium transition-colors hover:text-primary relative group"
+                                className="text-sm font-semibold text-slate-700 transition-colors hover:text-blue-700 relative group"
                             >
                                 {item.name}
-                                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
+                                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-cyan-500 transition-all group-hover:w-full"></span>
                             </Link>
                         ))}
                     </nav>
@@ -59,14 +62,14 @@ export function Navbar() {
 
             {/* Mobile Navigation */}
             {isOpen && (
-                <div className="md:hidden border-t bg-white/95 backdrop-blur-md">
+                <div className="md:hidden border-t border-white/70 bg-white/90 backdrop-blur-xl">
                     <Container className="py-4">
                         <nav className="flex flex-col gap-4">
                             {navigation.map((item) => (
                                 <Link
                                     key={item.name}
                                     href={item.href}
-                                    className="text-sm font-medium transition-colors hover:text-primary"
+                                    className="text-sm font-semibold text-slate-700 transition-colors hover:text-blue-700"
                                     onClick={() => setIsOpen(false)}
                                 >
                                     {item.name}

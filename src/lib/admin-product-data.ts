@@ -1,9 +1,11 @@
 export interface AdminProduct {
     id: string
     name: string
+    description: string
     packing: string
     image: string
     composition: string
+    dosageForm: string
     company: string
     category: string
     tags: string[]
@@ -19,10 +21,17 @@ export async function getAllProducts(): Promise<AdminProduct[]> {
         const res = await fetch(`${API_BASE}/api/products`);
         if (!res.ok) return [];
         const json = await res.json();
-        const raw = (json.data || []) as any[];
-        const normalized = raw.map((p) => ({ ...(p || {}), id: String(p.id ?? p._id ?? ''), tags: p.tags ?? [], generics: p.generics ?? [] }));
+        const raw = (json.data || []) as Array<Record<string, unknown>>;
+        const normalized = raw.map((p) => ({
+            ...(p || {}),
+            id: String(p.id ?? p._id ?? ''),
+            description: String(p.description ?? ''),
+            dosageForm: String(p.dosageForm ?? ''),
+            tags: Array.isArray(p.tags) ? p.tags : [],
+            generics: Array.isArray(p.generics) ? p.generics : [],
+        }));
         return normalized as AdminProduct[];
-    } catch (e) {
+    } catch {
         return [];
     }
 }
@@ -33,10 +42,17 @@ export async function getProductById(id: string): Promise<AdminProduct | undefin
         const res = await fetch(`${API_BASE}/api/products/${id}`);
         if (!res.ok) return undefined;
         const json = await res.json();
-        const p = json.data as any;
+        const p = json.data as Record<string, unknown> | undefined;
         if (!p) return undefined;
-        return { ...(p || {}), id: String(p.id ?? p._id ?? ''), tags: p.tags ?? [], generics: p.generics ?? [] } as AdminProduct | undefined;
-    } catch (e) {
+        return {
+            ...(p || {}),
+            id: String(p.id ?? p._id ?? ''),
+            description: String(p.description ?? ''),
+            dosageForm: String(p.dosageForm ?? ''),
+            tags: Array.isArray(p.tags) ? p.tags : [],
+            generics: Array.isArray(p.generics) ? p.generics : [],
+        } as AdminProduct | undefined;
+    } catch {
         const products = await getAllProducts();
         return products.find(product => product.id === id);
     }
@@ -55,7 +71,15 @@ export async function addProduct(product: Omit<AdminProduct, 'id'>): Promise<Adm
     });
     const json = await res.json();
     if (!res.ok) throw new Error(json.message || 'Failed to add product');
-    return { ...(json.product || {}), id: String(json.product._id) } as AdminProduct;
+    const created = json.data || json.product;
+    return {
+        ...(created || {}),
+        id: String(created?.id ?? created?._id ?? ''),
+        description: String(created?.description ?? ''),
+        dosageForm: String(created?.dosageForm ?? ''),
+        tags: Array.isArray(created?.tags) ? created.tags : [],
+        generics: Array.isArray(created?.generics) ? created.generics : [],
+    } as AdminProduct;
 }
 
 // Update existing product

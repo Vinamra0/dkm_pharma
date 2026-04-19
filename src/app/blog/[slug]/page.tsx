@@ -14,14 +14,14 @@ interface BlogPostPageProps {
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
     const { slug } = await params
     const base = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001'
-    let post: any = null
+    let post: { title: string; excerpt: string; content: string; image: string; category: string; date: string; author: string } | null = null
     try {
         const res = await fetch(`${base}/api/blogs/${slug}`, { cache: 'no-store' })
         if (res.ok) {
             const json = await res.json()
             if (json?.data) post = json.data
         }
-    } catch (e) {
+    } catch {
         // ignore
     }
 

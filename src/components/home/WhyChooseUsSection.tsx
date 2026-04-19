@@ -6,23 +6,23 @@ import { motion } from "framer-motion";
 const features = [
     {
         icon: ShieldCheck,
-        title: "Quality Assurance",
-        description: "We adhere to the highest international standards of safety and efficacy in all our pharmaceutical products.",
+        title: "25+ Years of Experience",
+        description: "A long-standing track record in healthcare distribution across Nepal with trusted execution since 1998.",
     },
     {
         icon: Globe,
-        title: "Global Reach",
-        description: "Partnering with world-class manufacturers to bring innovative healthcare solutions to the local market.",
+        title: "Global Partnerships",
+        description: "Collaborations with international pharmaceutical and medical technology leaders to bring advanced treatment options locally.",
     },
     {
         icon: Users,
-        title: "Experienced Team",
-        description: "Serving the healthcare community since 1998 with a dedicated team of professionals.",
+        title: "Healthcare Network",
+        description: "Strong hospital, clinic, pharmacy, and distributor network supporting nationwide healthcare access.",
     },
     {
         icon: Heart,
-        title: "Customer Focus",
-        description: "Committed to improving patient lives through accessible and reliable medication.",
+        title: "Affordability & Accessibility",
+        description: "Focused on making healthcare accessible first, and affordable for every patient.",
     },
 ];
 
@@ -60,10 +60,10 @@ export function WhyChooseUsSection() {
                     className="text-center max-w-3xl mx-auto mb-20"
                 >
                     <h2 className="text-4xl md:text-5xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 pb-2">
-                        Why Choose DK Medi Group?
+                        Trusted Healthcare Partner
                     </h2>
                     <p className="text-xl text-slate-600 leading-relaxed">
-                        We are dedicated to excellence in every aspect of our operations, ensuring better health for everyone.
+                        Reliable healthcare solutions backed by global collaboration, local execution, and patient-first commitment.
                     </p>
                 </motion.div>
 

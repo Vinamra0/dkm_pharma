@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { useState, useEffect } from "react"
 import { Container } from "@/components/ui/container"
 import { Button } from "@/components/ui/button"
@@ -74,14 +75,6 @@ export function GallerySection() {
     const [currentIndex, setCurrentIndex] = useState(0)
     const [direction, setDirection] = useState(0)
 
-    useEffect(() => {
-        const timer = setInterval(() => {
-            nextSlide()
-        }, 5000) // Auto-advance every 5 seconds
-
-        return () => clearInterval(timer)
-    }, [currentIndex])
-
     const nextSlide = () => {
         setDirection(1)
         setCurrentIndex((prevIndex) => (prevIndex + 1) % galleryImages.length)
@@ -92,10 +85,13 @@ export function GallerySection() {
         setCurrentIndex((prevIndex) => (prevIndex - 1 + galleryImages.length) % galleryImages.length)
     }
 
-    const goToSlide = (index: number) => {
-        setDirection(index > currentIndex ? 1 : -1)
-        setCurrentIndex(index)
-    }
+    useEffect(() => {
+        const timer = setInterval(() => {
+            nextSlide()
+        }, 5000) // Auto-advance every 5 seconds
+
+        return () => clearInterval(timer)
+    }, [currentIndex])
 
     const slideVariants = {
         enter: (direction: number) => ({
@@ -157,10 +153,13 @@ export function GallerySection() {
                                 }}
                                 className="absolute inset-0"
                             >
-                                <img
+                                <Image
                                     src={galleryImages[currentIndex].src}
                                     alt={galleryImages[currentIndex].alt}
-                                    className="w-full h-full object-cover"
+                                    fill
+                                    priority
+                                    sizes="100vw"
+                                    className="object-cover"
                                 />
                             </motion.div>
                         </AnimatePresence>

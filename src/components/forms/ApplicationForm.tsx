@@ -2,13 +2,24 @@
 
 import { useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
-import { UploadCloud } from "lucide-react"
+import { UploadCloud, AlertCircle } from "lucide-react"
 import { sendApplication } from "@/lib/client/sendApplication"
 
-export default function ApplicationForm({ jobId, jobTitle, onClose }: { jobId?: string; jobTitle?: string; onClose?: () => void }) {
+const STD_CODES = [
+    { code: '+977', country: 'Nepal' },
+    { code: '+1', country: 'USA/Canada' },
+    { code: '+44', country: 'UK' },
+    { code: '+91', country: 'India' },
+    { code: '+86', country: 'China' },
+    { code: '+81', country: 'Japan' },
+    { code: '+61', country: 'Australia' },
+]
+
+export default function ApplicationForm({ jobId, onClose }: { jobId?: string; onClose?: () => void }) {
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [phone, setPhone] = useState("")
+    const [stdCode, setStdCode] = useState("+977")
     const [education, setEducation] = useState("")
     const [experience, setExperience] = useState("")
     const [location, setLocation] = useState("")
@@ -16,6 +27,7 @@ export default function ApplicationForm({ jobId, jobTitle, onClose }: { jobId?: 
     const [cvFile, setCvFile] = useState<File | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [message, setMessage] = useState<string | null>(null)
+    const [phoneError, setPhoneError] = useState("")
     const fileRef = useRef<HTMLInputElement | null>(null)
 
     const MAX_SIZE = 10 * 1024 * 1024 // 10MB
@@ -45,13 +57,26 @@ export default function ApplicationForm({ jobId, jobTitle, onClose }: { jobId?: 
         setCvFile(f)
     }
 
+    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value.replace(/\D/g, '').slice(0, 10)
+        setPhone(value)
+        setPhoneError("")
+    }
+
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
         setMessage(null)
+        
         if (!name || !email) {
             setMessage("Please fill name and email.")
             return
         }
+
+        if (phone && !/^\d{10}$/.test(phone.replace(/\s/g, ''))) {
+            setPhoneError("Phone number must be exactly 10 digits")
+            return
+        }
+
         if (!cvFile) {
             setMessage("Please upload your CV.")
             return
@@ -60,7 +85,7 @@ export default function ApplicationForm({ jobId, jobTitle, onClose }: { jobId?: 
         const formData = new FormData()
         formData.append("name", name)
         formData.append("email", email)
-        formData.append("phone", phone)
+        formData.append("phone", phone ? `${stdCode}-${phone}` : "")
         formData.append("education", education)
         formData.append("experience", experience)
         formData.append("location", location)
@@ -77,6 +102,7 @@ export default function ApplicationForm({ jobId, jobTitle, onClose }: { jobId?: 
                 setName("")
                 setEmail("")
                 setPhone("")
+                setStdCode("+977")
                 setEducation("")
                 setExperience("")
                 setLocation("")
@@ -107,8 +133,37 @@ export default function ApplicationForm({ jobId, jobTitle, onClose }: { jobId?: 
                     <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" className="w-full border rounded px-3 py-2" />
                 </div>
                 <div>
-                    <label className="text-sm text-slate-700">Contact Number</label>
-                    <input value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full border rounded px-3 py-2" />
+                    <label className="text-sm text-slate-700">STD Code</label>
+                    <select value={stdCode} onChange={(e) => setStdCode(e.target.value)} className="w-full border rounded px-3 py-2">
+                        {STD_CODES.map((std) => (
+                            <option key={std.code} value={std.code}>
+                                {std.code} ({std.country})
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <div>
+                    <label className="text-sm text-slate-700">Contact Number (10 digits)</label>
+                    <div className="flex items-center gap-2">
+                        <span className="text-slate-600 font-medium">{stdCode}-</span>
+                        <div className="flex-1 relative">
+                            <input 
+                                value={phone} 
+                                onChange={handlePhoneChange} 
+                                maxLength={10}
+                                placeholder="5386780"
+                                className={`w-full border rounded px-3 py-2 font-mono ${phoneError ? 'border-red-400' : ''}`} 
+                            />
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500">
+                                {phone.length}/10
+                            </span>
+                        </div>
+                    </div>
+                    {phoneError && (
+                        <p className="text-sm text-red-600 flex items-center gap-1 mt-1">
+                            <AlertCircle className="h-4 w-4" /> {phoneError}
+                        </p>
+                    )}
                 </div>
                 <div>
                     <label className="text-sm text-slate-700">Educational Qualification</label>

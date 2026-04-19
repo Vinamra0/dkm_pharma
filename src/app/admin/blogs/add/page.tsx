@@ -76,7 +76,7 @@ export default function AddBlogPage() {
         try {
             await addBlog(formData);
             router.push('/admin/blogs');
-        } catch (error) {
+        } catch {
             alert('Failed to add blog post');
         } finally {
             setIsSubmitting(false);

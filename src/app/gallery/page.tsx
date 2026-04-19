@@ -20,7 +20,7 @@ async function getGalleryImages(): Promise<ImageItem[]> {
                 src: `/gallery/${encodeURIComponent(f)}`,
                 alt: f.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ")
             }))
-    } catch (e) {
+    } catch {
         return []
     }
 }

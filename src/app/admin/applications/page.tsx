@@ -16,15 +16,24 @@ export default function ApplicationsPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        loadApplications();
-    }, []);
-
     const loadApplications = async () => {
         const items = await getAllApplications();
         setApplications(items);
         setIsLoading(false);
     };
+
+    useEffect(() => {
+        let mounted = true;
+        (async () => {
+            const items = await getAllApplications();
+            if (!mounted) return;
+            setApplications(items);
+            setIsLoading(false);
+        })();
+        return () => {
+            mounted = false;
+        };
+    }, []);
 
     const handleDelete = async (id: string) => {
         if (confirm('Are you sure you want to delete this application?')) {
@@ -42,44 +51,91 @@ export default function ApplicationsPage() {
     // Download URLs are built via `downloadCvUrl()` which reads the configured env var.
 
     async function handleDownload(storedName?: string, originalName?: string, downloadUrl?: string) {
-        let urlToFetch: string | null = null
+        const candidateUrls: string[] = []
 
-        if (downloadUrl) {
-            // If backend provided an absolute URL, use it. If it's relative (starts with '/'),
-            // rewrite it to the CV backend base so the browser fetches from the backend service.
-            if (/^https?:\/\//i.test(downloadUrl)) {
-                urlToFetch = downloadUrl
-            } else if (downloadUrl.startsWith('/')) {
-                urlToFetch = `${CV_BASE.replace(/\/$/, '')}${downloadUrl}`
-            } else {
-                // unknown form — assume it's a relative path and prefix with CV_BASE
-                urlToFetch = `${CV_BASE.replace(/\/$/, '')}/${downloadUrl}`
-            }
-        } else if (storedName) {
-            urlToFetch = downloadCvUrl(storedName)
+        // Always try the local route first if we have stored filename metadata.
+        if (storedName) {
+            candidateUrls.push(`/api/admin/applications/cv/${encodeURIComponent(storedName)}`)
+            candidateUrls.push(downloadCvUrl(storedName))
         }
 
-        // Log final URL for debugging
-        console.debug('[Applications] download URL:', urlToFetch)
-        if (!urlToFetch) return
+        // Legacy/explicit URL from backend response.
+        if (downloadUrl) {
+            if (/^https?:\/\//i.test(downloadUrl)) {
+                candidateUrls.push(downloadUrl)
+            } else if (downloadUrl.startsWith('/')) {
+                candidateUrls.push(`${CV_BASE.replace(/\/$/, '')}${downloadUrl}`)
+            } else {
+                candidateUrls.push(`${CV_BASE.replace(/\/$/, '')}/${downloadUrl}`)
+            }
+        }
+
+        const uniqueCandidates = Array.from(new Set(candidateUrls.filter(Boolean)))
+        if (uniqueCandidates.length === 0) return
+
         try {
             const token = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : null
             const headers: Record<string,string> = {}
             if (token) headers['Authorization'] = `Bearer ${token}`
-            const res = await fetch(urlToFetch, { headers })
-            if (!res.ok) {
-                alert('Failed to download CV')
+
+            let selectedBytes: ArrayBuffer | null = null
+            let selectedContentType = ''
+            let usedUrl = ''
+            for (const url of uniqueCandidates) {
+                // Log each candidate URL for debugging
+                console.debug('[Applications] trying download URL:', url)
+                const attempt = await fetch(url, { headers })
+                if (!attempt.ok) continue
+
+                const contentType = (attempt.headers.get('content-type') || '').toLowerCase()
+                if (contentType.includes('application/json') || contentType.includes('text/html')) {
+                    continue
+                }
+
+                const bytes = await attempt.arrayBuffer()
+                if (bytes.byteLength === 0) continue
+
+                const isPdf = contentType.includes('application/pdf')
+                const isWord =
+                    contentType.includes('application/msword') ||
+                    contentType.includes('application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+
+                // Validate file signatures so non-file payloads are never downloaded as CVs.
+                const head = new Uint8Array(bytes.slice(0, 5))
+                const looksLikePdf =
+                    head.length >= 5 &&
+                    head[0] === 0x25 &&
+                    head[1] === 0x50 &&
+                    head[2] === 0x44 &&
+                    head[3] === 0x46 &&
+                    head[4] === 0x2d
+
+                if (isPdf && !looksLikePdf) continue
+                if (!isPdf && !isWord && !looksLikePdf) continue
+
+                selectedBytes = bytes
+                selectedContentType = contentType
+                usedUrl = url
+                break
+            }
+
+            if (!selectedBytes) {
+                alert('Failed to download a valid CV file')
                 return
             }
-            const blob = await res.blob()
+
+            const blob = new Blob([selectedBytes], {
+                type: selectedContentType || 'application/octet-stream',
+            })
             const url = URL.createObjectURL(blob)
             const a = document.createElement('a')
             a.href = url
-            a.download = originalName || (downloadUrl ? urlToFetch.split('/').pop() || 'download' : storedName || 'download')
+            a.download = originalName || (downloadUrl ? usedUrl.split('/').pop() || 'download' : storedName || 'download')
             document.body.appendChild(a)
             a.click()
             a.remove()
-            URL.revokeObjectURL(url)
+            // Revoke later to avoid browser races that can corrupt/abort downloads.
+            setTimeout(() => URL.revokeObjectURL(url), 60_000)
         } catch (e) {
             console.error(e)
             alert('Failed to download CV')

@@ -31,7 +31,7 @@ export default function EditCareerPage() {
             setForm({ title: c.title || '', location: c.location || '', type: c.type || 'Full-time', description: c.description || '' });
             setLoading(false);
         })();
-    }, [id]);
+    }, [id, router]);
 
     const handleChange = (k: string, v: string) => setForm(prev => ({ ...prev, [k]: v }));
 
@@ -39,10 +39,10 @@ export default function EditCareerPage() {
         e.preventDefault();
         setSaving(true);
         try {
-            const ok = await updateCareer(id, form as any);
+            const ok = await updateCareer(id, form);
             if (!ok) throw new Error('Update failed');
             router.push('/admin/careers');
-        } catch (err) {
+        } catch {
             alert('Failed to update job');
         } finally { setSaving(false); }
     };

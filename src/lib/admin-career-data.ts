@@ -14,9 +14,17 @@ export async function getAllCareers(): Promise<AdminCareer[]> {
         const res = await fetch(`${API_BASE}/api/careers`, { headers: { Authorization: typeof window !== 'undefined' ? `Bearer ${localStorage.getItem('admin_token')}` : '' } });
         if (!res.ok) throw new Error('Failed');
         const json = await res.json();
-        const raw = (json.data || []) as any[];
-        return raw.map(c => ({ ...(c || {}), id: String(c.id ?? c._id ?? ''), postedAt: c.postedAt ? String(c.postedAt) : String(c.createdAt || '') }));
-    } catch (e) {
+        const raw = (json.data || []) as Array<Record<string, unknown>>;
+        return raw.map((c) => ({
+            ...(c || {}),
+            id: String(c.id ?? c._id ?? ''),
+            title: String(c.title ?? ''),
+            location: String(c.location ?? ''),
+            type: String(c.type ?? ''),
+            description: String(c.description ?? ''),
+            postedAt: c.postedAt ? String(c.postedAt) : String(c.createdAt || ''),
+        })) as AdminCareer[];
+    } catch {
         return [];
     }
 }
@@ -55,7 +63,7 @@ export async function getCareerById(id: string): Promise<AdminCareer | undefined
         const c = json.data;
         if (!c) return undefined;
         return { ...(c || {}), id: String(c._id ?? c.id ?? ''), postedAt: String(c.postedAt || c.createdAt || '') } as AdminCareer;
-    } catch (e) {
+    } catch {
         return undefined;
     }
 }

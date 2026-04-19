@@ -1,6 +1,4 @@
 // Keep application list/fetches pointed to the app's API (Next.js) so only CVs are fetched from the backend.
-import { API_BASE } from '@/lib/api-base'
-
 export interface AdminApplication {
   id: string
   name?: string
@@ -10,6 +8,7 @@ export interface AdminApplication {
   coverLetter?: string
   storedName?: string
   originalName?: string
+  downloadUrl?: string
   createdAt?: string
 }
 
@@ -25,7 +24,7 @@ export async function getAllApplications(): Promise<AdminApplication[]> {
     })
     if (!res.ok) return []
     const json = await res.json()
-    const raw = (json.data || []) as any[]
+    const raw = (json.data || []) as Array<Record<string, unknown>>
     return raw.map((a) => {
       const id = String(a._id ?? a.id ?? '')
 
@@ -66,7 +65,7 @@ export async function getAllApplications(): Promise<AdminApplication[]> {
         downloadUrl,
       }) as AdminApplication
     }) as AdminApplication[]
-  } catch (e) {
+  } catch {
     return []
   }
 }
@@ -83,7 +82,7 @@ export async function getApplicationById(id: string): Promise<AdminApplication |
     const json = await res.json()
     const a = json.data || json.application || json
     if (!a) return undefined
-    const id = String(a._id ?? a.id ?? '')
+    const normalizedId = String(a._id ?? a.id ?? '')
     const storedName =
       a.cvStoredName ??
       a.storedName ??
@@ -111,13 +110,13 @@ export async function getApplicationById(id: string): Promise<AdminApplication |
 
     return {
       ...(a || {}),
-      id,
+      id: normalizedId,
       storedName,
       originalName,
       createdAt: String(a.appliedAt ?? a.createdAt ?? a.created_at ?? ''),
       downloadUrl,
     } as AdminApplication
-  } catch (e) {
+  } catch {
     return undefined
   }
 }

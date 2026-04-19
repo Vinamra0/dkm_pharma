@@ -1,12 +1,13 @@
 "use client";
 
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Plus, Search, Edit, Trash2, Package as PackageIcon } from 'lucide-react';
 import { ProtectedRoute } from '@/components/admin/ProtectedRoute';
 import { AdminHeader } from '@/components/admin/AdminHeader';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/Input';
 import { getAllProducts, deleteProduct, type AdminProduct } from '@/lib/admin-product-data';
@@ -16,15 +17,24 @@ export default function ProductsPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        loadProducts();
-    }, []);
-
     const loadProducts = async () => {
         const items = await getAllProducts();
         setProducts(items);
         setIsLoading(false);
     };
+
+    useEffect(() => {
+        let mounted = true;
+        (async () => {
+            const items = await getAllProducts();
+            if (!mounted) return;
+            setProducts(items);
+            setIsLoading(false);
+        })();
+        return () => {
+            mounted = false;
+        };
+    }, []);
 
     const handleDelete = async (id: string) => {
         if (confirm('Are you sure you want to delete this product?')) {
@@ -126,9 +136,12 @@ export default function ProductsPage() {
                                             >
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-3">
-                                                        <img
+                                                        <Image
                                                             src={product.image}
                                                             alt={product.name}
+                                                            width={48}
+                                                            height={48}
+                                                            unoptimized
                                                             className="w-12 h-12 rounded-lg object-cover"
                                                         />
                                                         <div>

@@ -1,7 +1,8 @@
 "use client";
 
+import Image from 'next/image';
 import { useState, useRef, ChangeEvent, DragEvent } from 'react';
-import { Upload, X, Image as ImageIcon, Loader2 } from 'lucide-react';
+import { X, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { UPLOAD_CONFIG, UploadType } from '@/lib/upload-config';
 import { Button } from './button';
 
@@ -30,14 +31,14 @@ export function ImageUpload({
     const handleFileSelect = async (file: File) => {
         // Validate file type
         const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001';
-        if (!UPLOAD_CONFIG.allowedTypes.includes(file.type as any)) {
+        if (!UPLOAD_CONFIG.allowedImageTypes.includes(file.type as (typeof UPLOAD_CONFIG.allowedImageTypes)[number])) {
             alert('Invalid file type. Only JPG, PNG, and WebP images are allowed.');
             return;
         }
 
         // Validate file size
-        if (file.size > UPLOAD_CONFIG.maxFileSize) {
-            alert(`File size exceeds ${UPLOAD_CONFIG.maxFileSize / 1024 / 1024}MB limit`);
+        if (file.size > UPLOAD_CONFIG.maxImageFileSize) {
+            alert(`File size exceeds ${UPLOAD_CONFIG.maxImageFileSize / 1024 / 1024}MB limit`);
             return;
         }
 
@@ -131,11 +132,15 @@ export function ImageUpload({
             >
                 {preview ? (
                     <div className="relative">
-                        <img
+                        <Image
                             src={preview}
                             alt="Preview"
-                            className="w-full h-64 object-cover rounded-lg"
+                            fill
+                            unoptimized
+                            sizes="100vw"
+                            className="object-cover rounded-lg"
                         />
+                        <div className="h-64" />
                         <Button
                             type="button"
                             variant="destructive"
@@ -152,7 +157,7 @@ export function ImageUpload({
                         <input
                             ref={fileInputRef}
                             type="file"
-                            accept={UPLOAD_CONFIG.allowedExtensions.join(',')}
+                            accept={UPLOAD_CONFIG.allowedImageExtensions.join(',')}
                             onChange={handleFileChange}
                             className="hidden"
                             disabled={isUploading}
@@ -180,7 +185,7 @@ export function ImageUpload({
                                         </button>
                                     </p>
                                     <p className="text-xs text-slate-500">
-                                        JPG, PNG or WebP (max {UPLOAD_CONFIG.maxFileSize / 1024 / 1024}MB)
+                                        JPG, PNG or WebP (max {UPLOAD_CONFIG.maxImageFileSize / 1024 / 1024}MB)
                                     </p>
                                 </div>
                             </div>

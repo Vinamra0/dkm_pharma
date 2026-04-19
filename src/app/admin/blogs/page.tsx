@@ -1,5 +1,6 @@
 "use client";
 
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -16,15 +17,24 @@ export default function BlogsPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        loadBlogs();
-    }, []);
-
     const loadBlogs = async () => {
         const items = await getAllBlogs();
         setBlogs(items);
         setIsLoading(false);
     };
+
+    useEffect(() => {
+        let mounted = true;
+        (async () => {
+            const items = await getAllBlogs();
+            if (!mounted) return;
+            setBlogs(items);
+            setIsLoading(false);
+        })();
+        return () => {
+            mounted = false;
+        };
+    }, []);
 
     const handleDelete = async (id: string) => {
         if (confirm('Are you sure you want to delete this blog post?')) {
@@ -99,10 +109,13 @@ export default function BlogsPage() {
                                     <Card className="card-hover h-full flex flex-col">
                                         <div className="relative h-48 overflow-hidden rounded-t-xl">
                                             {blog.image ? (
-                                                <img
+                                                <Image
                                                     src={blog.image}
                                                     alt={blog.title}
-                                                    className="w-full h-full object-cover"
+                                                    fill
+                                                    unoptimized
+                                                    sizes="(max-width: 1024px) 100vw, 33vw"
+                                                    className="object-cover"
                                                 />
                                             ) : (
                                                 <div className="w-full h-full bg-slate-100 flex items-center justify-center text-slate-400">

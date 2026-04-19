@@ -9,10 +9,14 @@ function checkAuth(req: NextRequest) {
     return h.replace('Bearer ', '') === adminToken
 }
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+type RouteContext = {
+    params: Promise<{ id: string }>
+}
+
+export async function GET(request: NextRequest, context: RouteContext) {
     try {
         if (!checkAuth(request)) return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 })
-        const id = params.id
+        const { id } = await context.params
         const item = await getApplicationById(id)
         if (!item) return NextResponse.json({ success: false, message: 'Not found' }, { status: 404 })
         return NextResponse.json({ success: true, data: item })
@@ -22,10 +26,10 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, context: RouteContext) {
     try {
         if (!checkAuth(request)) return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 })
-        const id = params.id
+        const { id } = await context.params
         const ok = await deleteApplicationById(id)
         if (!ok) return NextResponse.json({ success: false, message: 'Not found' }, { status: 404 })
         return NextResponse.json({ success: true })

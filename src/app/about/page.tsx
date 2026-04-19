@@ -1,181 +1,267 @@
 "use client";
 
-import { Container } from "@/components/ui/container"
-import { CheckCircle2, Target, Heart, Award, ArrowRight, ShieldCheck, Globe } from "lucide-react"
-import { motion } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
+import Link from "next/link";
+import { Container } from "@/components/ui/container";
+import { motion } from "framer-motion";
+import {
+    Target,
+    Heart,
+    Pill,
+    Activity,
+    FlaskConical,
+    Handshake,
+    Globe,
+    TrendingUp,
+    ShieldCheck,
+    Building2,
+    CheckCircle2,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+const whatWeDo = [
+    {
+        icon: Pill,
+        title: "Pharmaceutical Distribution",
+        points: [
+            "IV fluids and nutrition therapies",
+            "Antibiotics and critical care medicines",
+            "Oncology (anti-cancer drugs)",
+            "Portfolio access via Biocon, Natco, Naprod, and Biochem",
+        ],
+    },
+    {
+        icon: Activity,
+        title: "Medical Devices & Hospital Supplies",
+        points: [
+            "Dialysis systems and HD equipment",
+            "Anesthesia devices",
+            "Surgical sutures, gowns, and drapes",
+            "Infusion systems and critical care tools",
+        ],
+    },
+    {
+        icon: FlaskConical,
+        title: "Nutrition & Specialty Care",
+        points: [
+            "Parenteral nutrition solutions",
+            "Protein supplements (e.g., EverPRO)",
+            "Specialized hospital nutrition systems",
+        ],
+    },
+];
+
+const productCategories = [
+    "IV Fluids & Infusion Systems",
+    "Oncology & Specialty Drugs",
+    "Antibiotics & Critical Care Medicines",
+    "Dialysis & Renal Care",
+    "Surgical & Hospital Consumables",
+    "Clinical Nutrition",
+];
+
+const impactPoints = [
+    "Nationwide distribution network",
+    "Affordable access to advanced therapies",
+    "Support for cancer patients and critical care",
+    "Employment and skill development initiatives",
+    "Charitable medicine distribution and NGO collaboration",
+];
+
+const whyChoose = [
+    "25+ years of experience in healthcare distribution",
+    "Strong network of hospitals and pharmacies",
+    "Partnerships with global pharmaceutical leaders",
+    "Commitment to affordability and accessibility",
+    "Broad portfolio across critical healthcare segments",
+];
+
+const clients = [
+    "Hospitals & Clinics",
+    "Healthcare Institutions",
+    "Pharmacies & Distributors",
+    "Government & NGOs",
+    "Academic Medical Institutions",
+];
 
 export default function AboutPage() {
     return (
         <div className="bg-white min-h-screen">
-            {/* Hero Section */}
             <section className="bg-slate-900 py-20 text-white">
                 <Container>
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
-                        className="max-w-3xl"
+                        className="max-w-4xl"
                     >
                         <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-                            About <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">DK Medi Group</span>
+                            Who We Are at <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">DK Medi Group</span>
                         </h1>
-                        <p className="text-xl text-slate-300">
-                            Pioneering pharmaceutical excellence with a commitment to global health and wellness.
+                        <p className="text-xl text-slate-300 leading-relaxed">
+                            DK Medi Group (DKM) is a healthcare-focused organization dedicated to improving access to high-quality medical products and services across Nepal.
+                            Since 1998, DKM has been actively engaged in pharmaceutical distribution, collaborating with leading international and multinational healthcare companies.
                         </p>
                     </motion.div>
                 </Container>
             </section>
 
-            {/* Mission & Vision */}
             <section className="py-16 bg-white">
                 <Container>
-                    {/* Shared Gradient Definition */}
-                    <svg width="0" height="0" className="absolute">
-                        <defs>
-                            <linearGradient id="brand-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stopColor="#2563eb" />
-                                <stop offset="100%" stopColor="#06b6d4" />
-                            </linearGradient>
-                        </defs>
-                    </svg>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                        <motion.div
-                            whileHover={{ y: -8 }}
-                            className="bg-white p-10 rounded-3xl shadow-sm shadow-blue-50/50 hover:shadow-[0_20px_40px_-15px_rgba(37,99,235,0.2)] transition-all duration-300"
-                        >
-                            <motion.div
-                                whileHover={{ scale: 1.05 }}
-                                transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                                className="h-16 w-16 bg-blue-50 rounded-2xl flex items-center justify-center mb-8"
-                            >
-                                <Target className="h-8 w-8" stroke="url(#brand-gradient)" />
-                            </motion.div>
-                            <h2 className="text-3xl font-bold mb-6 text-slate-900">Our Mission</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <motion.div whileHover={{ y: -6 }} className="bg-white p-10 rounded-3xl shadow-sm shadow-blue-50/50 hover:shadow-[0_20px_40px_-15px_rgba(37,99,235,0.2)] transition-all duration-300">
+                            <div className="h-14 w-14 bg-blue-50 rounded-2xl flex items-center justify-center mb-6">
+                                <Target className="h-7 w-7 text-blue-600" />
+                            </div>
+                            <h2 className="text-3xl font-bold mb-4 text-slate-900">Mission</h2>
                             <p className="text-slate-600 leading-relaxed text-lg">
-                                To provide high-quality, affordable, and accessible medicines to people around the world. We strive to improve the quality of life by ensuring that essential healthcare solutions are within reach of every individual.
+                                To deliver world-class pharmaceutical, medical, and academic healthcare solutions by partnering with global leaders and leveraging modern technologies,
+                                making healthcare accessible first, and affordable for every patient.
                             </p>
                         </motion.div>
-                        <motion.div
-                            whileHover={{ y: -8 }}
-                            className="bg-white p-10 rounded-3xl shadow-sm shadow-blue-50/50 hover:shadow-[0_20px_40px_-15px_rgba(37,99,235,0.2)] transition-all duration-300"
-                        >
-                            <motion.div
-                                whileHover={{ scale: 1.05 }}
-                                transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                                className="h-16 w-16 bg-blue-50 rounded-2xl flex items-center justify-center mb-8"
-                            >
-                                <Heart className="h-8 w-8" stroke="url(#brand-gradient)" />
-                            </motion.div>
-                            <h2 className="text-3xl font-bold mb-6 text-slate-900">Our Vision</h2>
+
+                        <motion.div whileHover={{ y: -6 }} className="bg-white p-10 rounded-3xl shadow-sm shadow-blue-50/50 hover:shadow-[0_20px_40px_-15px_rgba(37,99,235,0.2)] transition-all duration-300">
+                            <div className="h-14 w-14 bg-blue-50 rounded-2xl flex items-center justify-center mb-6">
+                                <Heart className="h-7 w-7 text-blue-600" />
+                            </div>
+                            <h2 className="text-3xl font-bold mb-4 text-slate-900">Vision</h2>
                             <p className="text-slate-600 leading-relaxed text-lg">
-                                To be a global leader in the pharmaceutical industry, recognized for our innovation, quality, and ethical business practices. We aim to set new standards in healthcare delivery and patient safety.
+                                To become Nepal's most trusted healthcare company for patients, providers, and partners across the healthcare ecosystem.
                             </p>
                         </motion.div>
                     </div>
                 </Container>
             </section>
 
-            {/* Company Overview */}
-            {/* Company Overview */}
             <section className="py-16 bg-slate-50">
                 <Container>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                        <div className="space-y-8">
-                            <div>
-                                <h4 className="text-sm font-bold tracking-widest text-[#2563eb] uppercase mb-2">
-                                    About DK Medi Group
-                                </h4>
-                                <div className="relative inline-block">
-                                    <h2 className="text-4xl font-bold text-slate-900 mb-2">Our Journey</h2>
-                                    <motion.div
-                                        initial={{ scaleX: 0 }}
-                                        whileInView={{ scaleX: 1 }}
-                                        viewport={{ once: true }}
-                                        transition={{ duration: 0.8, ease: "circOut" }}
-                                        className="absolute bottom-0 left-0 w-2/3 h-1.5 bg-gradient-to-r from-blue-600 via-cyan-500 to-transparent rounded-full origin-left"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="space-y-6">
-                                <p className="text-slate-600 leading-relaxed">
-                                    Established in 1998, DK Medi Group has evolved from a visionary startup into a leading conglomerate in the pharmaceutical sector. As a Group of Companies, we have diversified our expertise to cover various aspects of healthcare, from importing and marketing to distribution.
-                                </p>
-                                <p className="text-slate-600 leading-relaxed">
-                                    Our commitment to quality is unwavering. We collaborate with international and multinational companies to bring world-class pharmaceutical products to the local market. We adhere to strict international standards to ensure that every product we handle is safe, effective, and reliable.
-                                </p>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-x-4 gap-y-6 pt-2">
-                                <div className="flex items-center gap-3">
-                                    <Award className="h-5 w-5" stroke="url(#brand-gradient)" />
-                                    <span className="font-medium text-slate-800">ISO Certified</span>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <ShieldCheck className="h-5 w-5" stroke="url(#brand-gradient)" />
-                                    <span className="font-medium text-slate-800">WHO-GMP Compliant</span>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <Award className="h-5 w-5" stroke="url(#brand-gradient)" />
-                                    <span className="font-medium text-slate-800">20+ Years Experience</span>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <Globe className="h-5 w-5" stroke="url(#brand-gradient)" />
-                                    <span className="font-medium text-slate-800">Global Presence</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="h-[400px] rounded-xl overflow-hidden bg-slate-200 relative">
-                            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1563213126-a4273aed2016?auto=format&fit=crop&q=80&w=800')" }} />
-                        </div>
+                    <div className="text-center max-w-3xl mx-auto mb-12">
+                        <h2 className="text-3xl font-bold text-slate-900 mb-3">What We Do</h2>
+                        <p className="text-slate-600 text-lg">Comprehensive Healthcare Solutions across multiple healthcare segments.</p>
                     </div>
-                </Container>
-            </section>
 
-            {/* Core Values */}
-            <section className="py-16 bg-white">
-                <Container>
-                    <div className="text-center mb-12">
-                        <div className="inline-block relative">
-                            <h2 className="text-3xl font-bold text-slate-900">Our Core Values</h2>
-                            <motion.div
-                                initial={{ scaleX: 0 }}
-                                whileInView={{ scaleX: 1 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.8, ease: "circOut" }}
-                                className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-full origin-center"
-                            />
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {[
-                            { title: "Integrity", desc: "We conduct our business with the highest ethical standards." },
-                            { title: "Innovation", desc: "We constantly seek new ways to improve healthcare solutions." },
-                            { title: "Quality", desc: "We never compromise on the safety and efficacy of our products." },
-                            { title: "Customer Focus", desc: "We put the needs of patients and healthcare providers first." },
-                            { title: "Sustainability", desc: "We are committed to environmentally responsible practices." },
-                            { title: "Teamwork", desc: "We believe in the power of collaboration and mutual respect." },
-                        ].map((value, index) => (
-                            <motion.div
-                                key={index}
-                                whileHover={{ y: -5 }}
-                                className="p-8 bg-white rounded-2xl shadow-sm shadow-blue-50/50 hover:shadow-[0_15px_30px_-10px_rgba(37,99,235,0.15)] transition-all duration-300"
-                            >
-                                <div className="flex items-center gap-4 mb-4">
-                                    <div className="p-2 bg-blue-50 rounded-lg">
-                                        <CheckCircle2 className="h-6 w-6 text-blue-600" />
-                                    </div>
-                                    <h3 className="text-xl font-bold text-slate-900">{value.title}</h3>
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        {whatWeDo.map((item) => (
+                            <motion.div key={item.title} whileHover={{ y: -6 }} className="bg-white rounded-3xl p-8 shadow-sm shadow-blue-50/50 hover:shadow-[0_18px_34px_-15px_rgba(37,99,235,0.2)] transition-all duration-300">
+                                <div className="h-12 w-12 bg-blue-50 rounded-xl flex items-center justify-center mb-5">
+                                    <item.icon className="h-6 w-6 text-blue-600" />
                                 </div>
-                                <p className="text-slate-600 leading-relaxed">{value.desc}</p>
+                                <h3 className="text-xl font-bold text-slate-900 mb-4">{item.title}</h3>
+                                <ul className="space-y-3">
+                                    {item.points.map((point) => (
+                                        <li key={point} className="flex items-start gap-2 text-slate-600 text-sm leading-relaxed">
+                                            <CheckCircle2 className="h-4 w-4 text-blue-600 mt-0.5 shrink-0" />
+                                            <span>{point}</span>
+                                        </li>
+                                    ))}
+                                </ul>
                             </motion.div>
                         ))}
                     </div>
                 </Container>
             </section>
+
+            <section className="py-16 bg-white">
+                <Container>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                        <div>
+                            <h2 className="text-3xl font-bold text-slate-900 mb-4">Product Categories</h2>
+                            <p className="text-slate-600 mb-6">
+                                DKM distributes a wide range of products from global manufacturers, including infusion solutions,
+                                chemotherapy drugs, dialysis consumables, and intensive care medicines.
+                            </p>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                {productCategories.map((category) => (
+                                    <div key={category} className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-700 text-sm font-medium">
+                                        <ShieldCheck className="h-4 w-4 text-blue-600" />
+                                        <span>{category}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="bg-slate-50 rounded-3xl p-8 border border-slate-200">
+                            <div className="flex items-center gap-3 mb-4">
+                                <Handshake className="h-6 w-6 text-blue-600" />
+                                <h3 className="text-2xl font-bold text-slate-900">Partnerships</h3>
+                            </div>
+                            <p className="text-slate-600 leading-relaxed mb-5">
+                                DK Medi Group works closely with internationally recognized pharmaceutical and medical technology companies to bring advanced healthcare solutions into Nepal.
+                            </p>
+                            <div className="space-y-2 text-slate-700 text-sm">
+                                <div className="flex items-center gap-2"><Globe className="h-4 w-4 text-blue-600" /> Access to cutting-edge treatments</div>
+                                <div className="flex items-center gap-2"><Globe className="h-4 w-4 text-blue-600" /> Consistent product quality</div>
+                                <div className="flex items-center gap-2"><Globe className="h-4 w-4 text-blue-600" /> International standards of care</div>
+                            </div>
+                        </div>
+                    </div>
+                </Container>
+            </section>
+
+            <section className="py-16 bg-slate-50">
+                <Container>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                        <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200">
+                            <div className="flex items-center gap-3 mb-4">
+                                <TrendingUp className="h-6 w-6 text-blue-600" />
+                                <h3 className="text-2xl font-bold text-slate-900">Impact</h3>
+                            </div>
+                            <ul className="space-y-3">
+                                {impactPoints.map((item) => (
+                                    <li key={item} className="flex items-start gap-2 text-slate-600 text-sm leading-relaxed">
+                                        <CheckCircle2 className="h-4 w-4 text-blue-600 mt-0.5 shrink-0" />
+                                        <span>{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200">
+                            <div className="flex items-center gap-3 mb-4">
+                                <Building2 className="h-6 w-6 text-blue-600" />
+                                <h3 className="text-2xl font-bold text-slate-900">Why Choose DKM</h3>
+                            </div>
+                            <ul className="space-y-3">
+                                {whyChoose.map((item) => (
+                                    <li key={item} className="flex items-start gap-2 text-slate-600 text-sm leading-relaxed">
+                                        <CheckCircle2 className="h-4 w-4 text-blue-600 mt-0.5 shrink-0" />
+                                        <span>{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                </Container>
+            </section>
+
+            <section className="py-16 bg-white">
+                <Container>
+                    <div className="text-center max-w-3xl mx-auto mb-10">
+                        <h2 className="text-3xl font-bold text-slate-900 mb-3">Clients & Target Segments</h2>
+                        <p className="text-slate-600">Serving diverse stakeholders across Nepal's healthcare ecosystem.</p>
+                    </div>
+                    <div className="flex flex-wrap justify-center gap-3">
+                        {clients.map((item) => (
+                            <span key={item} className="rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
+                                {item}
+                            </span>
+                        ))}
+                    </div>
+                </Container>
+            </section>
+
+            <section className="py-16 bg-slate-900 text-white">
+                <Container>
+                    <div className="text-center max-w-3xl mx-auto">
+                        <h2 className="text-3xl md:text-4xl font-bold mb-4">Let's Improve Healthcare Together</h2>
+                        <p className="text-slate-300 text-lg mb-8">
+                            Whether you're a healthcare provider, partner, or distributor, DK Medi Group is ready to collaborate.
+                        </p>
+                        <Button size="lg" variant="premium" asChild>
+                            <Link href="/contact">Contact Us</Link>
+                        </Button>
+                    </div>
+                </Container>
+            </section>
         </div>
-    )
+    );
 }

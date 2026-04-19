@@ -17,7 +17,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001';
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || '/backend';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
@@ -42,7 +42,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                         return;
                     }
                 }
-            } catch (e) {
+            } catch {
                 // ignore
             }
             // fallback: clear any stored session
@@ -71,7 +71,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 if (data.token) localStorage.setItem('admin_token', data.token);
             }
             return true;
-        } catch (e) {
+        } catch {
             return false;
         }
     };

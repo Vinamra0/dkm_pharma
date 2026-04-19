@@ -95,7 +95,7 @@ export default function EditBlogPage() {
         try {
             await updateBlog(blogId, formData);
             router.push('/admin/blogs');
-        } catch (error) {
+        } catch {
             alert('Failed to update blog post');
         } finally {
             setIsSubmitting(false);

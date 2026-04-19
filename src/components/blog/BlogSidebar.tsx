@@ -9,15 +9,8 @@ import { useState, useEffect } from "react"
 export function BlogSidebar() {
     const router = useRouter()
     const searchParams = useSearchParams()
-    const [searchTerm, setSearchTerm] = useState("")
-    const [posts, setPosts] = useState<any[]>([])
-
-    useEffect(() => {
-        const search = searchParams.get("search")
-        if (search) {
-            setSearchTerm(search)
-        }
-    }, [searchParams])
+    const [searchTerm, setSearchTerm] = useState(searchParams.get("search") || "")
+    const [posts, setPosts] = useState<Array<{ id: string; title: string; excerpt: string; author: string; date: string; image: string; category: string; slug: string }>>([])
 
     useEffect(() => {
         let mounted = true
@@ -28,9 +21,9 @@ export function BlogSidebar() {
                 if (res.ok) {
                     const json = await res.json()
                     if (Array.isArray(json?.data) && mounted) {
-                        const mapped = json.data.map((b: any) => ({
+                        const mapped = json.data.map((b: { _id?: string; id?: string; slug?: string; title?: string; excerpt?: string; content?: string; author?: string; createdAt?: string; date?: string; image?: string; category?: string }) => ({
                             id: b._id || b.id || b.slug,
-                            title: b.title,
+                            title: b.title || 'Untitled',
                             excerpt: b.excerpt || (b.content || '').slice(0,150),
                             author: b.author || 'DKM Team',
                             date: b.createdAt ? new Date(b.createdAt).toISOString().slice(0,10) : (b.date || ''),
@@ -41,7 +34,7 @@ export function BlogSidebar() {
                         setPosts(mapped)
                     }
                 }
-            } catch (e) {
+            } catch {
                 // on error, keep posts empty so UI shows fallback message
             }
         }

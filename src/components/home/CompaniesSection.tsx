@@ -28,7 +28,7 @@ export function CompaniesSection() {
             <div className="container mx-auto px-4 mb-10 text-center">
                 <div className="relative inline-block mb-4">
                     <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2">
-                        Trusted by Global Partners
+                        Global Collaboration, Local Impact
                     </h2>
                     <motion.div
                         initial={{ scaleX: 0 }}
@@ -39,7 +39,7 @@ export function CompaniesSection() {
                     />
                 </div>
                 <p className="text-slate-600 max-w-2xl mx-auto">
-                    We collaborate with leading international and multinational companies to bring the best healthcare solutions to you.
+                    DK Medi Group works with internationally recognized pharmaceutical and medical technology companies to bring advanced healthcare solutions into Nepal with consistent quality and international standards of care.
                 </p>
             </div>
 

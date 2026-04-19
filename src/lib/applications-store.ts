@@ -27,7 +27,7 @@ async function ensureStorage() {
     await mkdir(path.dirname(META_FILE), { recursive: true })
     try {
         await stat(META_FILE)
-    } catch (e) {
+    } catch {
         await writeFile(META_FILE, '[]', 'utf8')
     }
 }
@@ -37,7 +37,7 @@ export async function loadApplications(): Promise<StoredApplication[]> {
     const txt = await readFile(META_FILE, 'utf8')
     try {
         return JSON.parse(txt) as StoredApplication[]
-    } catch (e) {
+    } catch {
         return []
     }
 }
@@ -70,7 +70,7 @@ export async function deleteApplicationById(id: string) {
     const [removed] = items.splice(idx, 1)
     try {
         await unlink(path.join(STORAGE_DIR, removed.cvStoredName))
-    } catch (e) {
+    } catch {
         // ignore if file missing
     }
     await saveApplications(items)

@@ -27,7 +27,8 @@ export const UPLOAD_CONFIG = {
     maxCvFileSize: 10 * 1024 * 1024, // 10MB
 
     // File naming - uses UUID for guaranteed uniqueness
-    generateFileName: (originalName: string, type: 'products' | 'blogs' | 'applications') => {
+    generateFileName: (originalName: string, _type: 'products' | 'blogs' | 'applications') => {
+        void _type;
         // Generate a unique ID using crypto.randomUUID() for guaranteed uniqueness
         const uniqueId = crypto.randomUUID().split('-')[0]; // Use first segment (8 chars)
         const timestamp = Date.now();

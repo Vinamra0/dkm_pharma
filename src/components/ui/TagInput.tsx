@@ -23,16 +23,52 @@ export function TagInput({
 }: TagInputProps) {
     const [inputValue, setInputValue] = React.useState("")
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter' && inputValue.trim()) {
-            e.preventDefault()
-            if (!value.includes(inputValue.trim())) {
-                onChange([...value, inputValue.trim()])
+    const addTokens = (rawInput: string) => {
+        const tokens = rawInput
+            .split(/[,\n]+/)
+            .map((token) => token.trim())
+            .filter(Boolean)
+
+        if (tokens.length === 0) return
+
+        const existing = new Set(value)
+        const next = [...value]
+
+        for (const token of tokens) {
+            if (!existing.has(token)) {
+                existing.add(token)
+                next.push(token)
             }
+        }
+
+        if (next.length !== value.length) {
+            onChange(next)
+        }
+    }
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if ((e.key === 'Enter' || e.key === 'Tab' || e.key === ',') && inputValue.trim()) {
+            e.preventDefault()
+            addTokens(inputValue)
             setInputValue("")
         } else if (e.key === 'Backspace' && !inputValue && value.length > 0) {
             onChange(value.slice(0, -1))
         }
+    }
+
+    const handleBlur = () => {
+        if (!inputValue.trim()) return
+        addTokens(inputValue)
+        setInputValue("")
+    }
+
+    const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+        const pastedText = e.clipboardData.getData('text')
+        if (!pastedText.includes(',') && !pastedText.includes('\n')) return
+
+        e.preventDefault()
+        addTokens(pastedText)
+        setInputValue("")
     }
 
     const removeTag = (tagToRemove: string) => {
@@ -74,6 +110,8 @@ export function TagInput({
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyDown={handleKeyDown}
+                    onBlur={handleBlur}
+                    onPaste={handlePaste}
                     placeholder={value.length === 0 ? placeholder : ""}
                     className="flex-1 min-w-[120px] outline-none text-sm placeholder:text-slate-400"
                 />

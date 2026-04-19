@@ -12,17 +12,17 @@ export default async function BlogPage({
 }) {
     const params = await searchParams
     // Fetch posts from backend
-    let fetchedPosts: any[] = []
+    let fetchedPosts: Array<{ id: string; title: string; excerpt: string; content: string; author: string; date: string; image: string; category: string; slug: string }> = []
     try {
         const base = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001'
         const res = await fetch(`${base}/api/blogs`, { cache: 'no-store' })
         if (res.ok) {
             const json = await res.json()
-            if (Array.isArray(json?.data)) fetchedPosts = json.data.map((b: any) => ({
+            if (Array.isArray(json?.data)) fetchedPosts = json.data.map((b: { _id?: string; id?: string; slug?: string; title?: string; excerpt?: string; content?: string; author?: string; createdAt?: string; date?: string; image?: string; category?: string }) => ({
                 id: b._id || b.id || b.slug,
-                title: b.title,
+                title: b.title || 'Untitled',
                 excerpt: b.excerpt || (b.content || '').slice(0, 150),
-                content: b.content,
+                content: b.content || '',
                 author: b.author || 'DKM Team',
                 date: b.createdAt ? new Date(b.createdAt).toISOString().slice(0,10) : (b.date || ''),
                 image: b.image || '/assets/blog-default.jpg',
@@ -30,7 +30,7 @@ export default async function BlogPage({
                 slug: b.slug || (b._id || '')
             }))
         }
-    } catch (e) {
+    } catch {
         // on error, fetchedPosts remains empty
     }
 
@@ -76,7 +76,7 @@ export default async function BlogPage({
                             )}
                             {params.search && (
                                 <p className="text-slate-600">
-                                    Search results for <span className="font-semibold text-primary">"{params.search}"</span>
+                                    Search results for <span className="font-semibold text-primary">&quot;{params.search}&quot;</span>
                                 </p>
                             )}
                         </div>

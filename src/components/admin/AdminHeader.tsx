@@ -1,6 +1,7 @@
 "use client";
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { LogOut, LayoutDashboard, FileText, Package, Briefcase, Mail } from 'lucide-react';
@@ -21,13 +22,20 @@ export function AdminHeader() {
     const pathname = usePathname();
 
     return (
-        <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <header className="sticky top-0 z-50 bg-white/86 backdrop-blur-xl border-b border-white/70 shadow-[0_10px_30px_-22px_rgba(11,60,93,0.5)]">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-lg flex items-center justify-center">
-                            <span className="text-white font-bold text-lg">DK</span>
+                        <div className="h-10 w-10 overflow-hidden rounded-md border border-blue-100 bg-white">
+                            <Image
+                                src="/assets/branding/dkm-favicon-clean.png"
+                                alt="DKM"
+                                width={40}
+                                height={40}
+                                className="h-full w-full object-cover"
+                                priority
+                            />
                         </div>
                         <div>
                             <h1 className="text-lg font-bold text-midnight">Admin Portal</h1>
@@ -45,10 +53,10 @@ export function AdminHeader() {
                                         whileHover={{ scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
                                         className={cn(
-                                            "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors relative",
+                                            "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors relative",
                                             isActive
-                                                ? "text-blue-600 bg-blue-50"
-                                                : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                                                ? "text-blue-700 bg-blue-50/90"
+                                                : "text-slate-600 hover:text-blue-700 hover:bg-blue-50/70"
                                         )}
                                     >
                                         <item.icon className="w-4 h-4" />
@@ -56,7 +64,7 @@ export function AdminHeader() {
                                         {isActive && (
                                             <motion.div
                                                 layoutId="activeTab"
-                                                className="absolute inset-0 bg-blue-50 rounded-lg -z-10"
+                                                className="absolute inset-0 bg-blue-50/90 rounded-lg -z-10"
                                                 transition={{ type: "spring", stiffness: 380, damping: 30 }}
                                             />
                                         )}
@@ -92,10 +100,10 @@ export function AdminHeader() {
                             <Link key={item.name} href={item.href}>
                                 <div
                                     className={cn(
-                                        "flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap",
+                                        "flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-semibold whitespace-nowrap",
                                         isActive
-                                            ? "text-blue-600 bg-blue-50"
-                                            : "text-slate-600 hover:bg-slate-50"
+                                            ? "text-blue-700 bg-blue-50/90"
+                                            : "text-slate-600 hover:bg-blue-50/70 hover:text-blue-700"
                                     )}
                                 >
                                     <item.icon className="w-4 h-4" />

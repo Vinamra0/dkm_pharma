@@ -21,9 +21,11 @@ export default function AddProductPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
+        description: '',
         packing: '',
         image: '',
         composition: '',
+        dosageForm: '',
         company: '',
         category: '',
         tags: [] as string[],
@@ -43,8 +45,10 @@ export default function AddProductPage() {
     const validate = () => {
         const newErrors: Record<string, string> = {};
         if (!formData.name.trim()) newErrors.name = 'Product name is required';
+        if (!formData.description.trim()) newErrors.description = 'Description is required';
         if (!formData.packing.trim()) newErrors.packing = 'Packing is required';
         if (!formData.composition.trim()) newErrors.composition = 'Composition is required';
+        if (!formData.dosageForm.trim()) newErrors.dosageForm = 'Dosage form is required';
         if (!formData.company.trim()) newErrors.company = 'Company is required';
         if (!formData.category) newErrors.category = 'Category is required';
         if (!formData.subCategory) newErrors.subCategory = 'Sub-category is required';
@@ -67,7 +71,7 @@ export default function AddProductPage() {
         try {
             await addProduct(formData);
             router.push('/admin/products');
-        } catch (error) {
+        } catch {
             alert('Failed to add product');
         } finally {
             setIsSubmitting(false);
@@ -114,6 +118,16 @@ export default function AddProductPage() {
                                             required
                                         />
 
+                                        <Textarea
+                                            label="Description"
+                                            placeholder="e.g., Broad-spectrum antibiotic for bacterial infection management"
+                                            value={formData.description}
+                                            onChange={(e) => handleChange('description', e.target.value)}
+                                            error={errors.description}
+                                            rows={3}
+                                            required
+                                        />
+
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <Input
                                                 label="Company"
@@ -141,6 +155,15 @@ export default function AddProductPage() {
                                             onChange={(e) => handleChange('composition', e.target.value)}
                                             error={errors.composition}
                                             rows={3}
+                                            required
+                                        />
+
+                                        <Input
+                                            label="Dosage Form"
+                                            placeholder="e.g., Tablet, Capsule, Syrup"
+                                            value={formData.dosageForm}
+                                            onChange={(e) => handleChange('dosageForm', e.target.value)}
+                                            error={errors.dosageForm}
                                             required
                                         />
                                     </div>

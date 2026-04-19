@@ -44,7 +44,7 @@ export default async function CareerPage() {
                 </div>
 
                 <div className="mt-16 text-center bg-white p-8 rounded-lg border max-w-3xl mx-auto">
-                    <h3 className="text-xl font-semibold mb-4">Don't see a matching role?</h3>
+                    <h3 className="text-xl font-semibold mb-4">Don&apos;t see a matching role?</h3>
                     <p className="text-slate-600 mb-6">
                         We are always looking for talented individuals. Send your CV to our HR department, and we will contact you when a suitable position opens up.
                     </p>

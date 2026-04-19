@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Validate file type
-        if (!UPLOAD_CONFIG.allowedTypes.includes(file.type as any)) {
+        if (!UPLOAD_CONFIG.allowedImageTypes.includes(file.type as (typeof UPLOAD_CONFIG.allowedImageTypes)[number])) {
             return NextResponse.json(
                 { error: 'Invalid file type. Only JPG, PNG, and WebP images are allowed.' },
                 { status: 400 }
@@ -32,9 +32,9 @@ export async function POST(request: NextRequest) {
         }
 
         // Validate file size
-        if (file.size > UPLOAD_CONFIG.maxFileSize) {
+        if (file.size > UPLOAD_CONFIG.maxImageFileSize) {
             return NextResponse.json(
-                { error: `File size exceeds ${UPLOAD_CONFIG.maxFileSize / 1024 / 1024}MB limit` },
+                { error: `File size exceeds ${UPLOAD_CONFIG.maxImageFileSize / 1024 / 1024}MB limit` },
                 { status: 400 }
             );
         }

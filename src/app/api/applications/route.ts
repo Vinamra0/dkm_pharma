@@ -6,6 +6,9 @@ import { addApplication } from '@/lib/applications-store'
 
 export async function POST(request: NextRequest) {
     try {
+        const forwardedFor = request.headers.get('x-forwarded-for')
+        const clientIp = forwardedFor ? forwardedFor.split(',')[0].trim() : null
+
         const formData = await request.formData()
         const name = String(formData.get('name') ?? '')
         const email = String(formData.get('email') ?? '')
@@ -26,7 +29,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Validate file type & size
-        if (!UPLOAD_CONFIG.allowedCvTypes.includes(file.type as any)) {
+        if (!UPLOAD_CONFIG.allowedCvTypes.includes(file.type as (typeof UPLOAD_CONFIG.allowedCvTypes)[number])) {
             return NextResponse.json({ success: false, message: 'Invalid CV file type' }, { status: 400 })
         }
         if (file.size > UPLOAD_CONFIG.maxCvFileSize) {
@@ -62,17 +65,19 @@ export async function POST(request: NextRequest) {
             cvMimeType: file.type,
             cvSize: file.size,
             appliedAt,
-            ip: request.ip || null,
+            ip: clientIp,
         }
 
         await addApplication(item)
 
-        // Build an absolute download URL for the stored CV so the frontend can fetch
-        // the file from the CV backend. Prefer `NEXT_PUBLIC_CV_BACKEND_BASE` or
-        // `NEXT_PUBLIC_BACKEND_BASE`, fall back to localhost:3001 for dev.
-        const cvBase =
-            process.env.NEXT_PUBLIC_CV_BACKEND_BASE || process.env.NEXT_PUBLIC_BACKEND_BASE || 'http://localhost:3001'
-        const downloadUrl = `${cvBase.replace(/\/$/, '')}/api/admin/applications/cv/${encodeURIComponent(storedName)}`
+        // Return a local app-relative download URL by default so bytes are served
+        // from the same storage this API wrote to. If an explicit CV backend base
+        // is configured, keep using that absolute target.
+        const explicitCvBase = process.env.NEXT_PUBLIC_CV_BACKEND_BASE || process.env.NEXT_PUBLIC_BACKEND_BASE || ''
+        const downloadPath = `/api/admin/applications/cv/${encodeURIComponent(storedName)}`
+        const downloadUrl = explicitCvBase
+            ? `${explicitCvBase.replace(/\/$/, '')}${downloadPath}`
+            : downloadPath
 
         return NextResponse.json({ success: true, id, cvStoredName: storedName, downloadUrl }, { status: 201 })
     } catch (error) {
