@@ -365,7 +365,9 @@ export default function ProductsPage() {
         <div className="bg-slate-50 min-h-screen py-12">
             <Container>
                 <div className="text-center max-w-3xl mx-auto mb-12">
-                    <h1 className="text-4xl font-bold tracking-tight mb-4 text-slate-900">Our Products</h1>
+                    <h1 className="text-4xl font-bold tracking-tight mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-sky-500 to-cyan-500">
+                        Our Products
+                    </h1>
                     <p className="text-lg text-slate-600">
                         Discover our wide range of high-quality pharmaceutical products designed for your well-being.
                     </p>

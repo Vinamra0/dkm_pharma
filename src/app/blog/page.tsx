@@ -62,7 +62,9 @@ export default async function BlogPage({
                     <div className="lg:col-span-2 space-y-8">
                         <div>
                             <div className="flex items-center justify-between mb-4">
-                                <h1 className="text-3xl font-bold tracking-tight">Latest News & Articles</h1>
+                                <h1 className="text-3xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-sky-500 to-cyan-500">
+                                    Latest News & Articles
+                                </h1>
                                 {(params.category || params.search) && (
                                     <Button variant="outline" asChild>
                                         <Link href="/blog">Reset Filters</Link>

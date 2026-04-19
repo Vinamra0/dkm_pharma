@@ -114,7 +114,9 @@ export default function ContactPage() {
         <div className="bg-slate-50 min-h-screen py-12">
             <Container>
                 <div className="text-center max-w-3xl mx-auto mb-16">
-                    <h1 className="text-4xl font-bold tracking-tight mb-4">Contact Us</h1>
+                    <h1 className="text-4xl font-bold tracking-tight mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-sky-500 to-cyan-500">
+                        Contact Us
+                    </h1>
                     <p className="text-lg text-slate-600">
                         Have questions or need assistance? We are here to help. Reach out to us through any of the channels below.
                     </p>

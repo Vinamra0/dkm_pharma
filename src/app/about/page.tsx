@@ -86,7 +86,7 @@ const clients = [
 export default function AboutPage() {
     return (
         <div className="bg-white min-h-screen">
-            <section className="bg-slate-900 py-20 text-white">
+            <section className="bg-gradient-to-br from-slate-950 via-blue-950 to-cyan-950 py-20 text-white">
                 <Container>
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -94,10 +94,11 @@ export default function AboutPage() {
                         transition={{ duration: 0.8 }}
                         className="max-w-4xl"
                     >
-                        <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-                            Who We Are at <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">DK Medi Group</span>
+                        <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white leading-tight">
+                            <span className="block">Who We Are at</span>
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-sky-400 to-cyan-300">DK Medi Group</span>
                         </h1>
-                        <p className="text-xl text-slate-300 leading-relaxed">
+                        <p className="text-xl text-slate-200 leading-relaxed max-w-3xl">
                             DK Medi Group (DKM) is a healthcare-focused organization dedicated to improving access to high-quality medical products and services across Nepal.
                             Since 1998, DKM has been actively engaged in pharmaceutical distribution, collaborating with leading international and multinational healthcare companies.
                         </p>
