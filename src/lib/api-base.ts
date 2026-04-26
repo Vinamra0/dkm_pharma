@@ -41,6 +41,25 @@ function getUploadPathFromAny(input: string): string | null {
   return null
 }
 
+function getCvDownloadPathFromAny(input: string): string | null {
+  const normalized = input.replace(/\\/g, '/').trim()
+  const marker = '/api/admin/applications/cv/'
+  const markerIndex = normalized.indexOf(marker)
+  if (markerIndex >= 0) {
+    return normalized.slice(markerIndex)
+  }
+  if (normalized.startsWith('api/admin/applications/cv/')) {
+    return `/${normalized}`
+  }
+  if (normalized.startsWith('/backend/api/admin/applications/cv/')) {
+    return normalized.replace('/backend/api/admin/applications/cv/', '/api/admin/applications/cv/')
+  }
+  if (normalized.startsWith('backend/api/admin/applications/cv/')) {
+    return `/${normalized}`.replace('/backend/api/admin/applications/cv/', '/api/admin/applications/cv/')
+  }
+  return null
+}
+
 export function normalizeUploadPath(path?: string | null): string {
   if (!path) return ''
   const trimmed = path.trim()
@@ -58,6 +77,57 @@ export function normalizeUploadPath(path?: string | null): string {
   }
 
   return trimmed
+}
+
+export function extractCvStoredName(value?: string | null): string {
+  if (!value) return ''
+  const trimmed = value.trim()
+  if (!trimmed) return ''
+
+  const fromPath = getCvDownloadPathFromAny(trimmed)
+  if (fromPath) {
+    const segment = fromPath.split('/').pop() || ''
+    return segment ? decodeURIComponent(segment) : ''
+  }
+
+  try {
+    const url = new URL(trimmed)
+    const fromUrlPath = getCvDownloadPathFromAny(url.pathname)
+    if (fromUrlPath) {
+      const segment = fromUrlPath.split('/').pop() || ''
+      return segment ? decodeURIComponent(segment) : ''
+    }
+  } catch {
+    // Not an absolute URL.
+  }
+
+  return trimmed.includes('/') ? decodeURIComponent(trimmed.split('/').pop() || '') : trimmed
+}
+
+export function resolveCvDownloadUrl(pathOrUrl?: string | null): string {
+  if (!pathOrUrl) return ''
+  const trimmed = pathOrUrl.trim()
+  if (!trimmed) return ''
+
+  const fromPath = getCvDownloadPathFromAny(trimmed)
+  if (fromPath) return `${CV_BASE}${fromPath}`
+
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+    try {
+      const parsed = new URL(trimmed)
+      const isLocalHost = parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1' || parsed.hostname === '0.0.0.0'
+      const fromUrlPath = getCvDownloadPathFromAny(parsed.pathname)
+      if (isLocalHost && fromUrlPath) {
+        return `${CV_BASE}${fromUrlPath}`
+      }
+    } catch {
+      // Keep original absolute URL when parsing fails.
+    }
+    return trimmed
+  }
+
+  if (trimmed.startsWith('/')) return `${CV_BASE}${trimmed}`
+  return `${CV_BASE}/${trimmed}`
 }
 
 /**
@@ -102,7 +172,7 @@ export function resolveImageUrl(
 
 export function downloadCvUrl(storedName?: string) {
   if (!storedName) return ''
-  return `${CV_BASE}/api/admin/applications/cv/${encodeURIComponent(storedName)}`
+  return `${CV_BASE}/api/admin/applications/cv/${encodeURIComponent(extractCvStoredName(storedName))}`
 }
 
 export function adminListUrl() {

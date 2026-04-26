@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/Input';
 import { getAllBlogs, deleteBlog, type AdminBlogPost } from '@/lib/admin-blog-data';
+import { resolveImageUrl } from '@/lib/api-base';
 
 export default function BlogsPage() {
     const [blogs, setBlogs] = useState<AdminBlogPost[]>([]);
@@ -110,7 +111,7 @@ export default function BlogsPage() {
                                         <div className="relative h-48 overflow-hidden rounded-t-xl">
                                             {blog.image ? (
                                                 <Image
-                                                    src={blog.image}
+                                                    src={resolveImageUrl(blog.image, '/assets/blog-default.jpg')}
                                                     alt={blog.title}
                                                     fill
                                                     unoptimized

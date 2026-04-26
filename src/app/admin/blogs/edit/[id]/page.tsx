@@ -30,6 +30,7 @@ export default function EditBlogPage() {
     const blogId = params.id as string;
 
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isImageUploading, setIsImageUploading] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [formData, setFormData] = useState({
         title: '',
@@ -78,7 +79,11 @@ export default function EditBlogPage() {
         if (!formData.content.trim()) newErrors.content = 'Content is required';
         if (!formData.author.trim()) newErrors.author = 'Author is required';
         if (!formData.category) newErrors.category = 'Category is required';
-        if (!formData.image.trim()) newErrors.image = 'Image URL is required';
+        if (isImageUploading) {
+            newErrors.image = 'Image upload in progress. Please wait.';
+        } else if (!formData.image.trim()) {
+            newErrors.image = 'Image URL is required';
+        }
         if (!formData.slug.trim()) newErrors.slug = 'Slug is required';
 
         setErrors(newErrors);
@@ -209,6 +214,7 @@ export default function EditBlogPage() {
                                         label="Featured Image"
                                         value={formData.image}
                                         onChange={(path) => handleChange('image', path)}
+                                        onUploadingChange={setIsImageUploading}
                                         type="blogs"
                                         error={errors.image}
                                         required
@@ -220,12 +226,17 @@ export default function EditBlogPage() {
                                             variant="premium"
                                             size="lg"
                                             className="gap-2"
-                                            disabled={isSubmitting}
+                                            disabled={isSubmitting || isImageUploading}
                                         >
                                             {isSubmitting ? (
                                                 <>
                                                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                                                     Saving...
+                                                </>
+                                            ) : isImageUploading ? (
+                                                <>
+                                                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                                    Uploading image...
                                                 </>
                                             ) : (
                                                 <>

@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { Container } from "@/components/ui/container"
 import { BlogSidebar } from "@/components/blog/BlogSidebar"
-import { API_BASE } from "@/lib/api-base"
+import { API_BASE, resolveImageUrl } from "@/lib/api-base"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 
@@ -17,14 +17,15 @@ export default async function BlogPage({
         const res = await fetch(`${API_BASE}/api/blogs`, { cache: 'no-store' })
         if (res.ok) {
             const json = await res.json()
-            if (Array.isArray(json?.data)) fetchedPosts = json.data.map((b: { _id?: string; id?: string; slug?: string; title?: string; excerpt?: string; content?: string; author?: string; createdAt?: string; date?: string; image?: string; category?: string }) => ({
+            const rawPosts = (json?.data || json?.blogs || json?.items || []) as Array<{ _id?: string; id?: string; slug?: string; title?: string; excerpt?: string; content?: string; author?: string; createdAt?: string; date?: string; image?: string; category?: string }>
+            if (Array.isArray(rawPosts)) fetchedPosts = rawPosts.map((b) => ({
                 id: b._id || b.id || b.slug,
                 title: b.title || 'Untitled',
                 excerpt: b.excerpt || (b.content || '').slice(0, 150),
                 content: b.content || '',
                 author: b.author || 'DKM Team',
                 date: b.createdAt ? new Date(b.createdAt).toISOString().slice(0,10) : (b.date || ''),
-                image: b.image || '/assets/blog-default.jpg',
+                image: resolveImageUrl(b.image, '/assets/blog-default.jpg'),
                 category: b.category || 'General',
                 slug: b.slug || (b._id || '')
             }))

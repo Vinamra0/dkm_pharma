@@ -4,7 +4,7 @@ import { Container } from "@/components/ui/container"
 import { BlogSidebar } from "@/components/blog/BlogSidebar"
 import { Calendar, User, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { API_BASE } from "@/lib/api-base"
+import { API_BASE, resolveImageUrl } from "@/lib/api-base"
 
 interface BlogPostPageProps {
     params: Promise<{
@@ -20,13 +20,18 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         const res = await fetch(`${base}/api/blogs/${slug}`, { cache: 'no-store' })
         if (res.ok) {
             const json = await res.json()
-            if (json?.data) post = json.data
+            if (json?.data || json?.blog || json?.item) post = json.data || json.blog || json.item
         }
     } catch {
         // ignore
     }
 
     if (!post) notFound()
+
+    const normalizedPost = {
+        ...post,
+        image: resolveImageUrl(post.image, '/assets/blog-default.jpg'),
+    }
 
     return (
         <div className="min-h-screen page-surface py-12">
@@ -35,7 +40,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     {/* Main Content */}
                     <article className="lg:col-span-2 surface-card rounded-lg shadow-sm border overflow-hidden">
                         <div className="h-[400px] w-full relative bg-slate-200">
-                            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${post.image})` }} />
+                            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${normalizedPost.image})` }} />
                         </div>
                         <div className="p-8">
                             <Button variant="ghost" size="sm" className="mb-6 -ml-2 text-slate-500 hover:text-primary" asChild>

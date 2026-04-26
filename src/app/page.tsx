@@ -4,7 +4,7 @@ import Link from "next/link"
 import { ArrowRight, CheckCircle2 } from "lucide-react"
 import { Container } from "@/components/ui/container"
 import { Button } from "@/components/ui/button"
-import { API_BASE } from "@/lib/api-base"
+import { API_BASE, resolveImageUrl } from "@/lib/api-base"
 import { motion } from "framer-motion"
 import { WhyChooseUsSection } from "@/components/home/WhyChooseUsSection"
 import { CompaniesSection } from "@/components/home/CompaniesSection"
@@ -23,14 +23,15 @@ export default function Home() {
         const res = await fetch(`${API_BASE}/api/blogs`, { cache: 'no-store' })
         if (res.ok) {
           const json = await res.json()
-          if (Array.isArray(json?.data) && mounted) {
-            const mapped = json.data.map((b: { _id?: string; id?: string; slug?: string; title?: string; excerpt?: string; content?: string; author?: string; createdAt?: string; date?: string; image?: string; category?: string }) => ({
+          const rawPosts = (json?.data || json?.blogs || json?.items || []) as Array<{ _id?: string; id?: string; slug?: string; title?: string; excerpt?: string; content?: string; author?: string; createdAt?: string; date?: string; image?: string; category?: string }>
+          if (Array.isArray(rawPosts) && mounted) {
+            const mapped = rawPosts.map((b) => ({
               id: b._id || b.id || b.slug,
               title: b.title || 'Untitled',
               excerpt: b.excerpt || (b.content || '').slice(0,150),
               author: b.author || 'DKM Team',
               date: b.createdAt ? new Date(b.createdAt).toISOString().slice(0,10) : (b.date || ''),
-              image: b.image || '/assets/blog-default.jpg',
+              image: resolveImageUrl(b.image, '/assets/blog-default.jpg'),
               category: b.category || 'General',
               slug: b.slug || (b._id || '')
             }))

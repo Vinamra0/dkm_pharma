@@ -12,6 +12,8 @@ export interface AdminApplication {
   createdAt?: string
 }
 
+import { extractCvStoredName, resolveCvDownloadUrl } from '@/lib/api-base'
+
 const APP_API_BASE = process.env.NEXT_PUBLIC_API_BASE || ''
 
 export async function getAllApplications(): Promise<AdminApplication[]> {
@@ -24,7 +26,7 @@ export async function getAllApplications(): Promise<AdminApplication[]> {
     })
     if (!res.ok) return []
     const json = await res.json()
-    const raw = (json.data || []) as Array<Record<string, unknown>>
+    const raw = (json.data || json.applications || json.items || []) as Array<Record<string, unknown>>
     return raw.map((a) => {
       const id = String(a._id ?? a.id ?? '')
 
@@ -38,6 +40,15 @@ export async function getAllApplications(): Promise<AdminApplication[]> {
         a.file_name ??
         a.filename ??
         a.file ??
+        a.cv ??
+        a.cvFile ??
+        a.cv_file ??
+        a.cvFileName ??
+        a.cv_file_name ??
+        a.resumeFile ??
+        a.resume_file ??
+        a.resumeFileName ??
+        a.resume_file_name ??
         a.resume ??
         ''
 
@@ -49,17 +60,36 @@ export async function getAllApplications(): Promise<AdminApplication[]> {
         a.original_file_name ??
         a.fileName ??
         a.filename ??
+        a.cvFileName ??
+        a.cv_file_name ??
+        a.resumeFileName ??
+        a.resume_file_name ??
         a.resumeOriginalName ??
         a.resume_name ??
         ''
 
       // If backend already provides a direct URL to download, prefer it
-      const downloadUrl = a.downloadUrl ?? a.resumeUrl ?? a.fileUrl ?? a.cvUrl ?? a.url ?? ''
+      const rawDownloadUrl =
+        a.downloadUrl ??
+        a.resumeUrl ??
+        a.fileUrl ??
+        a.cvUrl ??
+        a.cvPath ??
+        a.cv_path ??
+        a.path ??
+        a.filePath ??
+        a.file_path ??
+        a.resumePath ??
+        a.resume_path ??
+        a.url ??
+        ''
+      const normalizedStoredName = extractCvStoredName(String(storedName || rawDownloadUrl || ''))
+      const downloadUrl = resolveCvDownloadUrl(String(rawDownloadUrl || ''))
 
       return ({
         ...(a || {}),
         id,
-        storedName,
+        storedName: normalizedStoredName,
         originalName,
         createdAt: String(a.appliedAt ?? a.createdAt ?? a.created_at ?? ''),
         downloadUrl,
@@ -80,7 +110,7 @@ export async function getApplicationById(id: string): Promise<AdminApplication |
     })
     if (!res.ok) return undefined
     const json = await res.json()
-    const a = json.data || json.application || json
+    const a = json.data || json.application || json.item || json
     if (!a) return undefined
     const normalizedId = String(a._id ?? a.id ?? '')
     const storedName =
@@ -92,6 +122,15 @@ export async function getApplicationById(id: string): Promise<AdminApplication |
       a.file_name ??
       a.filename ??
       a.file ??
+      a.cv ??
+      a.cvFile ??
+      a.cv_file ??
+      a.cvFileName ??
+      a.cv_file_name ??
+      a.resumeFile ??
+      a.resume_file ??
+      a.resumeFileName ??
+      a.resume_file_name ??
       a.resume ??
       ''
 
@@ -102,16 +141,35 @@ export async function getApplicationById(id: string): Promise<AdminApplication |
       a.original_file_name ??
       a.fileName ??
       a.filename ??
+      a.cvFileName ??
+      a.cv_file_name ??
+      a.resumeFileName ??
+      a.resume_file_name ??
       a.resumeOriginalName ??
       a.resume_name ??
       ''
 
-    const downloadUrl = a.downloadUrl ?? a.resumeUrl ?? a.fileUrl ?? a.cvUrl ?? a.url ?? ''
+    const rawDownloadUrl =
+      a.downloadUrl ??
+      a.resumeUrl ??
+      a.fileUrl ??
+      a.cvUrl ??
+      a.cvPath ??
+      a.cv_path ??
+      a.path ??
+      a.filePath ??
+      a.file_path ??
+      a.resumePath ??
+      a.resume_path ??
+      a.url ??
+      ''
+    const normalizedStoredName = extractCvStoredName(String(storedName || rawDownloadUrl || ''))
+    const downloadUrl = resolveCvDownloadUrl(String(rawDownloadUrl || ''))
 
     return {
       ...(a || {}),
       id: normalizedId,
-      storedName,
+      storedName: normalizedStoredName,
       originalName,
       createdAt: String(a.appliedAt ?? a.createdAt ?? a.created_at ?? ''),
       downloadUrl,

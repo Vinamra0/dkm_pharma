@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/Input';
 import { getAllApplications, deleteApplication, type AdminApplication } from '@/lib/admin-application-data';
-import { downloadCvUrl, CV_BASE } from '@/lib/api-base';
+import { downloadCvUrl, resolveCvDownloadUrl } from '@/lib/api-base';
 
 export default function ApplicationsPage() {
     const [applications, setApplications] = useState<AdminApplication[]>([]);
@@ -61,13 +61,7 @@ export default function ApplicationsPage() {
 
         // Legacy/explicit URL from backend response.
         if (downloadUrl) {
-            if (/^https?:\/\//i.test(downloadUrl)) {
-                candidateUrls.push(downloadUrl)
-            } else if (downloadUrl.startsWith('/')) {
-                candidateUrls.push(`${CV_BASE.replace(/\/$/, '')}${downloadUrl}`)
-            } else {
-                candidateUrls.push(`${CV_BASE.replace(/\/$/, '')}/${downloadUrl}`)
-            }
+            candidateUrls.push(resolveCvDownloadUrl(downloadUrl))
         }
 
         const uniqueCandidates = Array.from(new Set(candidateUrls.filter(Boolean)))
