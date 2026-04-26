@@ -11,7 +11,7 @@ export function Footer() {
                     <div className="space-y-4">
                         <div className="mb-4">
                             <Image
-                                src="/assets/branding/dkm-logo-clean.png"
+                                src="/assets/branding/dkm-logo-new.png"
                                 alt="DKM Group"
                                 width={220}
                                 height={64}

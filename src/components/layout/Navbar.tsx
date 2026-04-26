@@ -25,7 +25,7 @@ export function Navbar() {
                     <div className="flex items-center gap-2">
                         <Link href="/" className="flex items-center space-x-2 group">
                             <Image
-                                src="/assets/branding/dkm-logo-clean.png"
+                                src="/assets/branding/dkm-logo-new.png"
                                 alt="DKM Group"
                                 width={280}
                                 height={80}
