@@ -25,16 +25,20 @@ export default function Home() {
           const json = await res.json()
           const rawPosts = (json?.data || json?.blogs || json?.items || []) as Array<{ _id?: string; id?: string; slug?: string; title?: string; excerpt?: string; content?: string; author?: string; createdAt?: string; date?: string; image?: string; category?: string }>
           if (Array.isArray(rawPosts) && mounted) {
-            const mapped = rawPosts.map((b) => ({
-              id: b._id || b.id || b.slug,
-              title: b.title || 'Untitled',
-              excerpt: b.excerpt || (b.content || '').slice(0,150),
-              author: b.author || 'DKM Team',
-              date: b.createdAt ? new Date(b.createdAt).toISOString().slice(0,10) : (b.date || ''),
-              image: resolveImageUrl(b.image, '/assets/blog-default.jpg'),
-              category: b.category || 'General',
-              slug: b.slug || (b._id || '')
-            }))
+            const mapped = rawPosts.map((b, index) => {
+              const id = String(b._id ?? b.id ?? b.slug ?? '').trim() || `blog-${index}`
+              const slug = String(b.slug ?? b._id ?? b.id ?? '').trim() || id
+              return {
+                id,
+                title: b.title || 'Untitled',
+                excerpt: b.excerpt || (b.content || '').slice(0,150),
+                author: b.author || 'DKM Team',
+                date: b.createdAt ? new Date(b.createdAt).toISOString().slice(0,10) : (b.date || ''),
+                image: resolveImageUrl(b.image, '/assets/blog-default.jpg'),
+                category: b.category || 'General',
+                slug,
+              }
+            })
             setPosts(mapped)
           }
         }
