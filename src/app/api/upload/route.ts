@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile } from 'fs/promises';
-import { join } from 'path';
+import { mkdir, writeFile } from 'fs/promises';
+import { dirname, join } from 'path';
 import { UPLOAD_CONFIG, UploadType } from '@/lib/upload-config';
 
 export async function POST(request: NextRequest) {
@@ -45,12 +45,16 @@ export async function POST(request: NextRequest) {
         // Get the public path
         const publicPath = UPLOAD_CONFIG.getStoragePath(fileName, type);
 
-        // Get the file system path
-        const filePath = join(process.cwd(), 'public', publicPath);
+        // Normalize path to keep writes inside the public folder.
+        const relativePublicPath = publicPath.replace(/^\/+/, '');
+        const filePath = join(process.cwd(), 'public', relativePublicPath);
 
         // Convert file to buffer
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
+
+        // Ensure destination directory exists before writing file.
+        await mkdir(dirname(filePath), { recursive: true });
 
         // Write file to disk
         await writeFile(filePath, buffer);

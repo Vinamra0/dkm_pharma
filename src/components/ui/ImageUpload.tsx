@@ -30,7 +30,6 @@ export function ImageUpload({
 
     const handleFileSelect = async (file: File) => {
         // Validate file type
-        const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001';
         if (!UPLOAD_CONFIG.allowedImageTypes.includes(file.type as (typeof UPLOAD_CONFIG.allowedImageTypes)[number])) {
             alert('Invalid file type. Only JPG, PNG, and WebP images are allowed.');
             return;
@@ -55,7 +54,8 @@ export function ImageUpload({
             formData.append('file', file);
             formData.append('type', type);
 
-            const response = await fetch(`${API_BASE}/api/upload`, {
+            // Upload to Next.js API route on the same origin to avoid CORS/base URL mismatches.
+            const response = await fetch('/api/upload', {
                 method: 'POST',
                 body: formData,
             });
