@@ -14,7 +14,7 @@ export interface AdminProduct {
     packageType: string
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001';
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || '/backend';
 
 export async function getAllProducts(): Promise<AdminProduct[]> {
     try {

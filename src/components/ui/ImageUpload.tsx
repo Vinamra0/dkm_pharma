@@ -28,6 +28,19 @@ export function ImageUpload({
     const [preview, setPreview] = useState<string | null>(value || null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    const getUploadTargets = () => {
+        const envBase = (process.env.NEXT_PUBLIC_API_BASE || '').replace(/\/$/, '');
+        const targets = ['/api/upload'];
+
+        // If backend base is configured, keep it as a fallback.
+        if (envBase) targets.push(`${envBase}/api/upload`);
+
+        // Backend proxy fallback for deployments that route APIs through Next rewrites.
+        targets.push('/backend/api/upload');
+
+        return Array.from(new Set(targets));
+    };
+
     const handleFileSelect = async (file: File) => {
         // Validate file type
         if (!UPLOAD_CONFIG.allowedImageTypes.includes(file.type as (typeof UPLOAD_CONFIG.allowedImageTypes)[number])) {
@@ -54,20 +67,40 @@ export function ImageUpload({
             formData.append('file', file);
             formData.append('type', type);
 
-            // Upload to Next.js API route on the same origin to avoid CORS/base URL mismatches.
-            const response = await fetch('/api/upload', {
-                method: 'POST',
-                body: formData,
-            });
+            let uploaded = false;
+            let lastError: Error | null = null;
 
-            const data = await response.json();
+            for (const target of getUploadTargets()) {
+                try {
+                    const response = await fetch(target, {
+                        method: 'POST',
+                        body: formData,
+                    });
 
-            if (!response.ok) {
-                throw new Error(data.message || data.error || 'Upload failed');
+                    const data = await response.json().catch(() => ({} as { error?: string; message?: string; path?: string }));
+
+                    if (response.ok && data?.path) {
+                        onChange(data.path);
+                        uploaded = true;
+                        break;
+                    }
+
+                    const message = data?.message || data?.error || `Upload failed (${response.status})`;
+
+                    // Validation/auth errors should be surfaced immediately.
+                    if (response.status >= 400 && response.status < 500 && response.status !== 404) {
+                        throw new Error(message);
+                    }
+
+                    lastError = new Error(message);
+                } catch (err) {
+                    lastError = err instanceof Error ? err : new Error('Failed to upload image');
+                }
             }
 
-            // Update parent with the path
-            onChange(data.path);
+            if (!uploaded) {
+                throw lastError || new Error('Failed to upload image');
+            }
         } catch (err) {
             console.error('Upload error:', err);
             alert(err instanceof Error ? err.message : 'Failed to upload image');
