@@ -124,6 +124,16 @@ export default function ProductsPage() {
         composition: "",
     });
 
+    const normalizeProductImage = (value?: string) => {
+        if (!value) return '/assets/products/sample-paracetamol.jpg';
+        if (value.startsWith('http://') || value.startsWith('https://') || value.startsWith('data:')) return value;
+        if (value.startsWith('/uploads/')) return value;
+        if (value.startsWith('/assets/')) return value;
+        if (value.startsWith('uploads/')) return `/${value}`;
+        if (value.startsWith('assets/')) return `/${value}`;
+        return value;
+    };
+
     const toggleInArray = (field: keyof Omit<FiltersState, "packing" | "composition">, value: string) => {
         setFilters((prev) => {
             const current = prev[field] as string[];
@@ -139,7 +149,7 @@ export default function ProductsPage() {
         async function fetchProducts() {
             setLoading(true);
             try {
-                const base = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001';
+                const base = process.env.NEXT_PUBLIC_API_BASE || '/backend';
                 const res = await fetch(`${base}/api/products`, { cache: 'no-store' });
                 if (res.ok) {
                     const json = await res.json();
@@ -153,7 +163,7 @@ export default function ProductsPage() {
                             return {
                                 id: p._id || p.id || '',
                                 name: p.name || 'Untitled',
-                                image: p.image || '/assets/products/sample-paracetamol.jpg',
+                                image: normalizeProductImage(p.image),
                                 company: p.company || '',
                                 category: p.category || 'General',
                                 subCategory: p.subCategory || '',

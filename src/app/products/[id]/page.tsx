@@ -12,7 +12,7 @@ interface ProductPageProps {
 
 export default async function ProductPage({ params }: ProductPageProps) {
     const { id } = await params
-    const base = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001'
+    const base = process.env.NEXT_PUBLIC_API_BASE || process.env.BACKEND_PROXY_TARGET || 'http://localhost:3001'
     let product: {
         category: string
         name: string

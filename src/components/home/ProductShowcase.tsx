@@ -10,11 +10,21 @@ import { useState, useEffect } from "react"
 export function ProductShowcase() {
     const [products, setProducts] = useState<Array<{ id: string; name: string; category: string; description: string; image: string }>>([])
 
+    const normalizeProductImage = (value?: string) => {
+        if (!value) return '/assets/products/sample-paracetamol.svg'
+        if (value.startsWith('http://') || value.startsWith('https://') || value.startsWith('data:')) return value
+        if (value.startsWith('/uploads/')) return value
+        if (value.startsWith('/assets/')) return value
+        if (value.startsWith('uploads/')) return `/${value}`
+        if (value.startsWith('assets/')) return `/${value}`
+        return value
+    }
+
     useEffect(() => {
         let mounted = true
         async function load() {
             try {
-                const base = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001'
+                const base = process.env.NEXT_PUBLIC_API_BASE || '/backend'
                 const res = await fetch(`${base}/api/products`, { cache: 'no-store' })
                 if (res.ok) {
                     const json = await res.json()
@@ -24,7 +34,7 @@ export function ProductShowcase() {
                             name: p.name || 'Untitled',
                             category: p.category || 'General',
                             description: p.composition || p.description || '',
-                            image: p.image || '/assets/products/sample-paracetamol.svg'
+                            image: normalizeProductImage(p.image)
                         }))
                         setProducts(mapped)
                     }
