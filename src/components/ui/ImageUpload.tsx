@@ -1,10 +1,10 @@
 "use client";
 
 import Image from 'next/image';
-import { useState, useRef, ChangeEvent, DragEvent } from 'react';
+import { useState, useRef, ChangeEvent, DragEvent, useEffect } from 'react';
 import { X, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { UPLOAD_CONFIG, UploadType } from '@/lib/upload-config';
-import { API_BASE, resolveImageUrl } from '@/lib/api-base';
+import { resolveImageUrl } from '@/lib/api-base';
 import { Button } from './button';
 
 interface ImageUploadProps {
@@ -14,6 +14,7 @@ interface ImageUploadProps {
     type: UploadType;
     error?: string;
     required?: boolean;
+    onUploadingChange?: (isUploading: boolean) => void;
 }
 
 export function ImageUpload({
@@ -23,12 +24,19 @@ export function ImageUpload({
     type,
     error,
     required,
+    onUploadingChange,
 }: ImageUploadProps) {
     const [isUploading, setIsUploading] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
     // Resolve an existing value (e.g. /uploads/...) to a full URL for the preview
     const [preview, setPreview] = useState<string | null>(value ? resolveImageUrl(value) : null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (!isUploading) {
+            setPreview(value ? resolveImageUrl(value) : null);
+        }
+    }, [value, isUploading]);
 
     const handleFileSelect = async (file: File) => {
         // Validate file type
@@ -44,6 +52,7 @@ export function ImageUpload({
         }
 
         setIsUploading(true);
+        onUploadingChange?.(true);
 
         try {
             // Show a local preview immediately while uploading
@@ -51,7 +60,7 @@ export function ImageUpload({
             reader.onload = (e) => setPreview(e.target?.result as string);
             reader.readAsDataURL(file);
 
-            const uploadUrl = `${API_BASE}/api/upload`;
+            const uploadUrl = '/api/upload';
 
             const formData = new FormData();
             formData.append('file', file);
@@ -102,6 +111,7 @@ export function ImageUpload({
             setPreview(value ? resolveImageUrl(value) : null);
         } finally {
             setIsUploading(false);
+            onUploadingChange?.(false);
         }
     };
 

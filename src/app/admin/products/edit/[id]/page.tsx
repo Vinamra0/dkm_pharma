@@ -22,6 +22,7 @@ export default function EditProductPage() {
     const productId = params.id as string;
 
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isImageUploading, setIsImageUploading] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [formData, setFormData] = useState({
         name: '',
@@ -82,7 +83,11 @@ export default function EditProductPage() {
         if (!formData.category) newErrors.category = 'Category is required';
         if (!formData.subCategory) newErrors.subCategory = 'Sub-category is required';
         if (!formData.packageType) newErrors.packageType = 'Package type is required';
-        if (!formData.image.trim()) newErrors.image = 'Image URL is required';
+        if (isImageUploading) {
+            newErrors.image = 'Image upload in progress. Please wait.';
+        } else if (!formData.image.trim()) {
+            newErrors.image = 'Product image is required';
+        }
         if (formData.tags.length === 0) newErrors.tags = 'At least one tag is required';
         if (formData.generics.length === 0) newErrors.generics = 'At least one generic name is required';
 
@@ -266,6 +271,7 @@ export default function EditProductPage() {
                                             label="Product Image"
                                             value={formData.image}
                                             onChange={(path) => handleChange('image', path)}
+                                            onUploadingChange={setIsImageUploading}
                                             type="products"
                                             error={errors.image}
                                             required
@@ -278,12 +284,17 @@ export default function EditProductPage() {
                                             variant="premium"
                                             size="lg"
                                             className="gap-2"
-                                            disabled={isSubmitting}
+                                            disabled={isSubmitting || isImageUploading}
                                         >
                                             {isSubmitting ? (
                                                 <>
                                                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                                                     Saving...
+                                                </>
+                                            ) : isImageUploading ? (
+                                                <>
+                                                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                                    Uploading image...
                                                 </>
                                             ) : (
                                                 <>
