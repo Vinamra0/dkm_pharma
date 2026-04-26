@@ -14,7 +14,7 @@ export interface AdminProduct {
     packageType: string
 }
 
-import { API_BASE } from '@/lib/api-base';
+import { API_BASE, normalizeUploadPath } from '@/lib/api-base';
 
 export async function getAllProducts(): Promise<AdminProduct[]> {
     try {
@@ -25,6 +25,7 @@ export async function getAllProducts(): Promise<AdminProduct[]> {
         const normalized = raw.map((p) => ({
             ...(p || {}),
             id: String(p.id ?? p._id ?? ''),
+            image: normalizeUploadPath(String(p.image ?? p.imageUrl ?? '')),
             description: String(p.description ?? ''),
             dosageForm: String(p.dosageForm ?? ''),
             tags: Array.isArray(p.tags) ? p.tags : [],
@@ -47,6 +48,7 @@ export async function getProductById(id: string): Promise<AdminProduct | undefin
         return {
             ...(p || {}),
             id: String(p.id ?? p._id ?? ''),
+            image: normalizeUploadPath(String(p.image ?? p.imageUrl ?? '')),
             description: String(p.description ?? ''),
             dosageForm: String(p.dosageForm ?? ''),
             tags: Array.isArray(p.tags) ? p.tags : [],
@@ -75,6 +77,7 @@ export async function addProduct(product: Omit<AdminProduct, 'id'>): Promise<Adm
     return {
         ...(created || {}),
         id: String(created?.id ?? created?._id ?? ''),
+        image: normalizeUploadPath(String(created?.image ?? created?.imageUrl ?? product.image ?? '')),
         description: String(created?.description ?? ''),
         dosageForm: String(created?.dosageForm ?? ''),
         tags: Array.isArray(created?.tags) ? created.tags : [],

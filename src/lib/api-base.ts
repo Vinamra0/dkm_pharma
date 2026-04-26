@@ -17,6 +17,49 @@ export const API_BASE = (
 // `CV_BASE` reuses `API_BASE` — CV files are stored on the same backend.
 export const CV_BASE = API_BASE
 
+function getUploadPathFromAny(input: string): string | null {
+  const normalized = input.replace(/\\/g, '/').trim()
+  const uploadIndex = normalized.indexOf('/uploads/')
+  if (uploadIndex >= 0) {
+    return normalized.slice(uploadIndex)
+  }
+  if (normalized.startsWith('uploads/')) {
+    return `/${normalized}`
+  }
+  if (normalized.startsWith('/backend/uploads/')) {
+    return normalized.replace('/backend/uploads/', '/uploads/')
+  }
+  if (normalized.startsWith('backend/uploads/')) {
+    return `/${normalized}`.replace('/backend/uploads/', '/uploads/')
+  }
+  if (normalized.startsWith('/api/uploads/')) {
+    return normalized.replace('/api/uploads/', '/uploads/')
+  }
+  if (normalized.startsWith('api/uploads/')) {
+    return `/${normalized}`.replace('/api/uploads/', '/uploads/')
+  }
+  return null
+}
+
+export function normalizeUploadPath(path?: string | null): string {
+  if (!path) return ''
+  const trimmed = path.trim()
+  if (!trimmed) return ''
+
+  const uploadPath = getUploadPathFromAny(trimmed)
+  if (uploadPath) return uploadPath
+
+  try {
+    const url = new URL(trimmed)
+    const uploadPathFromUrl = getUploadPathFromAny(url.pathname)
+    if (uploadPathFromUrl) return uploadPathFromUrl
+  } catch {
+    // Not a valid absolute URL; keep original value.
+  }
+
+  return trimmed
+}
+
 /**
  * Resolves an image path stored in the database to a fully displayable URL.
  *
@@ -31,12 +74,30 @@ export function resolveImageUrl(
   fallback = '/assets/products/sample-paracetamol.svg'
 ): string {
   if (!path) return fallback
-  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:')) return path
-  if (path.startsWith('/uploads/') || path.startsWith('uploads/')) {
-    const normalised = path.startsWith('/') ? path : `/${path}`
-    return `${API_BASE}${normalised}`
+  const normalizedPath = normalizeUploadPath(path)
+  if (!normalizedPath) return fallback
+
+  if (normalizedPath.startsWith('data:')) return normalizedPath
+
+  if (normalizedPath.startsWith('/uploads/')) {
+    return `${API_BASE}${normalizedPath}`
   }
-  return path
+
+  if (normalizedPath.startsWith('http://') || normalizedPath.startsWith('https://')) {
+    try {
+      const parsed = new URL(normalizedPath)
+      const isLocalHost = parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1' || parsed.hostname === '0.0.0.0'
+      const uploadPath = getUploadPathFromAny(parsed.pathname)
+      if (isLocalHost && uploadPath) {
+        return `${API_BASE}${uploadPath}`
+      }
+    } catch {
+      // Keep original absolute URL when parsing fails unexpectedly.
+    }
+    return normalizedPath
+  }
+
+  return normalizedPath
 }
 
 export function downloadCvUrl(storedName?: string) {

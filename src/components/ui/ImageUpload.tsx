@@ -3,7 +3,7 @@
 import { useState, useRef, ChangeEvent, DragEvent, useEffect } from 'react';
 import { X, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { UPLOAD_CONFIG, UploadType } from '@/lib/upload-config';
-import { resolveImageUrl } from '@/lib/api-base';
+import { normalizeUploadPath, resolveImageUrl } from '@/lib/api-base';
 import { Button } from './button';
 
 interface ImageUploadProps {
@@ -109,9 +109,9 @@ export function ImageUpload({
                 throw new Error(message);
             }
 
-            // Store the raw path (/uploads/file.jpg). isLocalPreview stays true so the
-            // data-URL preview is kept — no flicker or blank state after upload.
-            onChange(returnedPath);
+            // Persist canonical upload paths like /uploads/file.jpg to avoid storing
+            // backend hostnames (e.g. localhost from container internals) in DB records.
+            onChange(normalizeUploadPath(returnedPath));
         } catch (err) {
             console.error('Upload error:', err);
             alert(err instanceof Error ? err.message : 'Failed to upload image');
