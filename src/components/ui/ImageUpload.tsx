@@ -1,6 +1,5 @@
 "use client";
 
-import Image from 'next/image';
 import { useState, useRef, ChangeEvent, DragEvent, useEffect } from 'react';
 import { X, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { UPLOAD_CONFIG, UploadType } from '@/lib/upload-config';
@@ -170,16 +169,13 @@ export function ImageUpload({
         `}
             >
                 {preview ? (
-                    <div className="relative">
-                        <Image
+                    <div className="relative h-64">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
                             src={preview}
                             alt="Preview"
-                            fill
-                            unoptimized
-                            sizes="100vw"
-                            className="object-cover rounded-lg"
+                            className="absolute inset-0 w-full h-full object-cover rounded-lg"
                         />
-                        <div className="h-64" />
                         <Button
                             type="button"
                             variant="destructive"
