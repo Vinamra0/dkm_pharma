@@ -20,6 +20,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         name: string
         description: string
         image: string
+        imageUrl?: string
         composition?: string
         dosageForm?: string
         packing?: string
@@ -44,7 +45,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             dosageForm: product!.dosageForm || 'Not provided',
             packaging: product!.packing || product!.packageType || 'Not provided'
         },
-        image: resolveImageUrl(product!.image)
+        image: resolveImageUrl(product!.image || product!.imageUrl)
     }
 
     return (

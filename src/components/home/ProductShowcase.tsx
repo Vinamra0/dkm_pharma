@@ -19,12 +19,12 @@ export function ProductShowcase() {
                 if (res.ok) {
                     const json = await res.json()
                     if (Array.isArray(json?.data) && mounted) {
-                        const mapped = json.data.map((p: { _id?: string; id?: string; name?: string; category?: string; composition?: string; description?: string; image?: string }) => ({
+                        const mapped = json.data.map((p: { _id?: string; id?: string; name?: string; category?: string; composition?: string; description?: string; image?: string; imageUrl?: string }) => ({
                             id: p._id || p.id,
                             name: p.name || 'Untitled',
                             category: p.category || 'General',
                             description: p.composition || p.description || '',
-                            image: resolveImageUrl(p.image)
+                            image: resolveImageUrl(p.image ?? p.imageUrl)
                         }))
                         setProducts(mapped)
                     }

@@ -72,20 +72,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                                     {post.excerpt}
                                 </p>
                                 <div className="text-slate-700 leading-relaxed space-y-4">
-                                    {/* Simulating rich text content */}
                                     <p>{post.content}</p>
-                                    <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                    </p>
-                                    <h3>Key Takeaways</h3>
-                                    <ul>
-                                        <li>Understanding the basics is crucial.</li>
-                                        <li>Consulting with healthcare professionals is recommended.</li>
-                                        <li>Regular check-ups can prevent long-term issues.</li>
-                                    </ul>
-                                    <p>
-                                        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                    </p>
                                 </div>
                             </div>
                         </div>

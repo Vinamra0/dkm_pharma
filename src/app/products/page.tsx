@@ -32,6 +32,7 @@ type ApiProduct = {
     id?: string;
     name?: string;
     image?: string;
+    imageUrl?: string;
     company?: string;
     category?: string;
     subCategory?: string;
@@ -154,7 +155,7 @@ export default function ProductsPage() {
                             return {
                                 id: p._id || p.id || '',
                                 name: p.name || 'Untitled',
-                                image: resolveImageUrl(p.image, '/assets/products/sample-paracetamol.jpg'),
+                                image: resolveImageUrl(p.image ?? p.imageUrl, '/assets/products/sample-paracetamol.svg'),
                                 company: p.company || '',
                                 category: p.category || 'General',
                                 subCategory: p.subCategory || '',
