@@ -3,6 +3,8 @@ import { mkdir, writeFile } from 'fs/promises';
 import { dirname, join } from 'path';
 import { UPLOAD_CONFIG, UploadType } from '@/lib/upload-config';
 
+export const runtime = 'nodejs';
+
 export async function POST(request: NextRequest) {
     try {
         const formData = await request.formData();
@@ -65,9 +67,10 @@ export async function POST(request: NextRequest) {
             fileName,
         });
     } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to upload file';
         console.error('Upload error:', error);
         return NextResponse.json(
-            { error: 'Failed to upload file' },
+            { error: message || 'Failed to upload file' },
             { status: 500 }
         );
     }
