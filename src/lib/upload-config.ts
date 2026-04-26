@@ -23,7 +23,7 @@ export const UPLOAD_CONFIG = {
     allowedCvExtensions: ['.pdf', '.doc', '.docx'],
 
     // Max file sizes
-    maxImageFileSize: 5 * 1024 * 1024, // 5MB
+    maxImageFileSize: 20 * 1024 * 1024, // 20MB
     maxCvFileSize: 10 * 1024 * 1024, // 10MB
 
     // File naming - uses UUID for guaranteed uniqueness

@@ -62,37 +62,67 @@ export function ImageUpload({
             reader.onload = (e) => setPreview(e.target?.result as string);
             reader.readAsDataURL(file);
 
-            // Upload file
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('type', type);
-
             let uploaded = false;
             let lastError: Error | null = null;
 
             for (const target of getUploadTargets()) {
                 try {
+                    // Build a fresh form payload per attempt.
+                    // Backends may accept any one of: file, image, upload.
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('image', file);
+                    formData.append('upload', file);
+                    formData.append('type', type);
+
                     const response = await fetch(target, {
                         method: 'POST',
                         body: formData,
                     });
 
-                    const data = await response.json().catch(() => ({} as { error?: string; message?: string; path?: string }));
+                    type UploadResponse = {
+                        error?: string;
+                        message?: string;
+                        path?: string;
+                        url?: string;
+                        location?: string;
+                        fileName?: string;
+                        data?: { path?: string; url?: string; location?: string; fileName?: string };
+                    };
 
-                    if (response.ok && data?.path) {
-                        onChange(data.path);
+                    let data: UploadResponse = {};
+                    let textBody = '';
+                    const contentType = response.headers.get('content-type') || '';
+                    if (contentType.includes('application/json')) {
+                        data = await response.json().catch(() => ({}));
+                    } else {
+                        textBody = await response.text().catch(() => '');
+                    }
+
+                    const returnedPath =
+                        data?.path ||
+                        data?.url ||
+                        data?.location ||
+                        data?.data?.path ||
+                        data?.data?.url ||
+                        data?.data?.location ||
+                        (data?.fileName ? `${UPLOAD_CONFIG.directories[type]}/${data.fileName}` : '') ||
+                        (data?.data?.fileName ? `${UPLOAD_CONFIG.directories[type]}/${data.data.fileName}` : '');
+
+                    if (response.ok && returnedPath) {
+                        onChange(returnedPath);
                         uploaded = true;
                         break;
                     }
 
-                    const message = data?.message || data?.error || `Upload failed (${response.status})`;
+                    const message =
+                        data?.message ||
+                        data?.error ||
+                        textBody ||
+                        `Upload failed (${response.status})`;
 
-                    // Validation/auth errors should be surfaced immediately.
-                    if (response.status >= 400 && response.status < 500 && response.status !== 404) {
-                        throw new Error(message);
-                    }
-
-                    lastError = new Error(message);
+                    // Keep trying remaining targets; don't hard-stop on first 4xx.
+                    lastError = new Error(`${message} [${target}]`);
                 } catch (err) {
                     lastError = err instanceof Error ? err : new Error('Failed to upload image');
                 }
