@@ -22,12 +22,12 @@ export function AdminHeader() {
     const pathname = usePathname();
 
     return (
-        <header className="sticky top-0 z-50 bg-white/86 backdrop-blur-xl border-b border-white/70 shadow-[0_10px_30px_-22px_rgba(11,60,93,0.5)]">
+        <header className="sticky top-0 z-50 border-b border-white/70 bg-[linear-gradient(120deg,rgba(255,255,255,0.9),rgba(235,246,255,0.78))] backdrop-blur-xl shadow-[0_14px_34px_-24px_rgba(14,116,144,0.55)]">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
                     <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 overflow-hidden rounded-md border border-blue-100 bg-white">
+                        <div className="h-10 w-10 overflow-hidden rounded-md border border-blue-100/80 bg-white/88">
                             <Image
                                 src="/assets/branding/dkm-favicon-clean.png"
                                 alt="DKM"

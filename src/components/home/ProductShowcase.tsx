@@ -41,7 +41,7 @@ export function ProductShowcase() {
     const featuredProducts = products.slice(0, 4)
 
     return (
-        <section className="py-24 bg-slate-50">
+        <section className="py-16 md:py-20 bg-white/30">
             <Container>
                 <div className="flex items-center justify-between mb-12">
                     <div>
@@ -74,7 +74,7 @@ export function ProductShowcase() {
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1 }}
                             whileHover={{ y: -8 }}
-                            className="bg-white rounded-3xl overflow-hidden shadow-sm shadow-blue-50/50 hover:shadow-[0_20px_40px_-15px_rgba(37,99,235,0.2)] transition-all duration-300 group flex flex-col"
+                            className="surface-card rounded-3xl overflow-hidden shadow-sm shadow-blue-50/50 hover:shadow-[0_20px_40px_-15px_rgba(37,99,235,0.2)] transition-all duration-300 group flex flex-col"
                         >
                             <div className="h-64 bg-slate-100 relative overflow-hidden">
                                 <div

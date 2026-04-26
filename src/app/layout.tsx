@@ -21,9 +21,10 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   const isAdminRoute = pathname?.startsWith('/admin');
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="relative flex min-h-screen flex-col">
+      <div className="site-ambient" aria-hidden="true" />
       {!isAdminRoute && <Navbar />}
-      <main className="flex-1">{children}</main>
+      <main className="relative z-10 flex-1">{children}</main>
       {!isAdminRoute && <Footer />}
     </div>
   );

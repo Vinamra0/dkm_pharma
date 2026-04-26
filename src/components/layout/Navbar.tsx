@@ -19,7 +19,7 @@ export function Navbar() {
     const [isOpen, setIsOpen] = React.useState(false)
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b border-white/70 bg-white/76 backdrop-blur-xl supports-[backdrop-filter]:bg-white/64 shadow-[0_12px_34px_-24px_rgba(11,60,93,0.45)] transition-all duration-300">
+        <header className="sticky top-0 z-50 w-full border-b border-white/65 bg-[linear-gradient(120deg,rgba(255,255,255,0.84),rgba(238,247,255,0.7))] backdrop-blur-xl shadow-[0_16px_38px_-24px_rgba(14,116,144,0.5)] transition-all duration-300">
             <Container>
                 <div className="flex h-20 items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -62,7 +62,7 @@ export function Navbar() {
 
             {/* Mobile Navigation */}
             {isOpen && (
-                <div className="md:hidden border-t border-white/70 bg-white/90 backdrop-blur-xl">
+                <div className="md:hidden border-t border-white/70 bg-[linear-gradient(130deg,rgba(255,255,255,0.92),rgba(236,246,255,0.82))] backdrop-blur-xl">
                     <Container className="py-4">
                         <nav className="flex flex-col gap-4">
                             {navigation.map((item) => (

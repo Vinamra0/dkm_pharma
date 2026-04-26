@@ -49,13 +49,13 @@ export default function EditCareerPage() {
 
     if (loading) return (
         <ProtectedRoute>
-            <div className="min-h-screen bg-slate-50"><AdminHeader /><main className="max-w-3xl mx-auto p-6">Loading...</main></div>
+            <div className="min-h-screen page-surface"><AdminHeader /><main className="max-w-3xl mx-auto p-6">Loading...</main></div>
         </ProtectedRoute>
     );
 
     return (
         <ProtectedRoute>
-            <div className="min-h-screen bg-slate-50">
+            <div className="min-h-screen page-surface">
                 <AdminHeader />
                 <main className="max-w-3xl mx-auto px-4 py-8">
                     <div className="mb-6">
@@ -63,7 +63,7 @@ export default function EditCareerPage() {
                         <h1 className="text-2xl font-bold mt-4">Edit Job Posting</h1>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded shadow-sm">
+                    <form onSubmit={handleSubmit} className="surface-card space-y-6 rounded p-6 shadow-sm">
                         <Input label="Title" value={form.title} onChange={(e) => handleChange('title', e.target.value)} required />
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <Input label="Location" value={form.location} onChange={(e) => handleChange('location', e.target.value)} />

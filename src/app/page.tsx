@@ -46,7 +46,11 @@ export default function Home() {
     return () => { mounted = false }
   }, [])
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="relative isolate flex min-h-screen flex-col overflow-hidden">
+      <div className="home-ambient-bg" aria-hidden="true" />
+      <div className="home-grid-overlay" aria-hidden="true" />
+      <div className="home-gradient-sweep" aria-hidden="true" />
+      <div className="relative z-10">
       {/* Hero Section */}
       <section className="relative bg-slate-950 py-24 md:py-36 overflow-hidden">
         <PharmaHeroBackground />
@@ -83,9 +87,9 @@ export default function Home() {
       <WhyChooseUsSection />
 
       {/* About Preview */}
-      <section className="py-24 bg-slate-50">
+      <section className="py-16 md:py-20 bg-white/32">
         <Container>
-          <div className="grid grid-cols-1 gap-16 md:grid-cols-2 items-center">
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-12 items-center">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -151,7 +155,7 @@ export default function Home() {
       <ProductShowcase />
 
       {/* Latest Blog Posts */}
-      <section className="py-24 bg-white">
+      <section className="py-16 md:py-20 bg-white/34">
         <Container>
           <div className="flex items-center justify-between mb-12">
             <div>
@@ -183,7 +187,7 @@ export default function Home() {
                 viewport={{ once: true }}
                 whileHover={{ y: -8 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="bg-white rounded-3xl overflow-hidden shadow-sm shadow-blue-50/50 hover:shadow-[0_20px_40px_-15px_rgba(37,99,235,0.2)] transition-shadow duration-300 group"
+                className="surface-card rounded-3xl overflow-hidden shadow-sm shadow-blue-50/50 hover:shadow-[0_20px_40px_-15px_rgba(37,99,235,0.2)] transition-shadow duration-300 group"
               >
                 <div className="h-64 bg-slate-100 relative overflow-hidden">
                   <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style={{ backgroundImage: `url(${post.image})` }} />
@@ -214,6 +218,7 @@ export default function Home() {
 
       {/* Gallery Section */}
       <GallerySection />
+      </div>
     </div>
   )
 }

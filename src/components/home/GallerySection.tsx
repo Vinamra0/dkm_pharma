@@ -111,7 +111,7 @@ export function GallerySection() {
     }
 
     return (
-        <section className="py-16 bg-white">
+        <section className="py-14 md:py-16 bg-white/30">
             <Container>
                 <div className="flex items-center justify-between mb-8">
                     <div>

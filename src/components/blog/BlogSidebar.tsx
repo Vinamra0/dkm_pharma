@@ -61,7 +61,7 @@ export function BlogSidebar() {
     return (
         <div className="space-y-8">
             {/* Search Widget */}
-            <div className="p-6 bg-white rounded-lg shadow-sm border">
+            <div className="surface-card rounded-lg border p-6 shadow-sm">
                 <h3 className="text-lg font-semibold mb-4">Search</h3>
                 <div className="relative">
                     <input
@@ -76,7 +76,7 @@ export function BlogSidebar() {
             </div>
 
             {/* Categories Widget */}
-            <div className="p-6 bg-white rounded-lg shadow-sm border">
+            <div className="surface-card rounded-lg border p-6 shadow-sm">
                 <h3 className="text-lg font-semibold mb-4">Categories</h3>
                 <ul className="space-y-2">
                     {categories.map((category) => (
@@ -96,7 +96,7 @@ export function BlogSidebar() {
             </div>
 
             {/* Recent Posts Widget */}
-            <div className="p-6 bg-white rounded-lg shadow-sm border">
+            <div className="surface-card rounded-lg border p-6 shadow-sm">
                 <h3 className="text-lg font-semibold mb-4">Recent Posts</h3>
                 <ul className="space-y-4">
                     {recentPosts.map((post) => (

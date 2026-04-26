@@ -85,7 +85,7 @@ const clients = [
 
 export default function AboutPage() {
     return (
-        <div className="bg-white min-h-screen">
+        <div className="min-h-screen page-surface">
             <section className="bg-gradient-to-br from-slate-950 via-blue-950 to-cyan-950 py-20 text-white">
                 <Container>
                     <motion.div
@@ -106,10 +106,10 @@ export default function AboutPage() {
                 </Container>
             </section>
 
-            <section className="py-16 bg-white">
+            <section className="py-16 bg-white/25">
                 <Container>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <motion.div whileHover={{ y: -6 }} className="bg-white p-10 rounded-3xl shadow-sm shadow-blue-50/50 hover:shadow-[0_20px_40px_-15px_rgba(37,99,235,0.2)] transition-all duration-300">
+                        <motion.div whileHover={{ y: -6 }} className="surface-card p-10 rounded-3xl shadow-sm shadow-blue-50/50 hover:shadow-[0_20px_40px_-15px_rgba(37,99,235,0.2)] transition-all duration-300">
                             <div className="h-14 w-14 bg-blue-50 rounded-2xl flex items-center justify-center mb-6">
                                 <Target className="h-7 w-7 text-blue-600" />
                             </div>
@@ -120,7 +120,7 @@ export default function AboutPage() {
                             </p>
                         </motion.div>
 
-                        <motion.div whileHover={{ y: -6 }} className="bg-white p-10 rounded-3xl shadow-sm shadow-blue-50/50 hover:shadow-[0_20px_40px_-15px_rgba(37,99,235,0.2)] transition-all duration-300">
+                        <motion.div whileHover={{ y: -6 }} className="surface-card p-10 rounded-3xl shadow-sm shadow-blue-50/50 hover:shadow-[0_20px_40px_-15px_rgba(37,99,235,0.2)] transition-all duration-300">
                             <div className="h-14 w-14 bg-blue-50 rounded-2xl flex items-center justify-center mb-6">
                                 <Heart className="h-7 w-7 text-blue-600" />
                             </div>
@@ -133,7 +133,7 @@ export default function AboutPage() {
                 </Container>
             </section>
 
-            <section className="py-16 bg-slate-50">
+            <section className="py-16 bg-white/20">
                 <Container>
                     <div className="text-center max-w-3xl mx-auto mb-12">
                         <h2 className="text-3xl font-bold text-slate-900 mb-3">What We Do</h2>
@@ -142,7 +142,7 @@ export default function AboutPage() {
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {whatWeDo.map((item) => (
-                            <motion.div key={item.title} whileHover={{ y: -6 }} className="bg-white rounded-3xl p-8 shadow-sm shadow-blue-50/50 hover:shadow-[0_18px_34px_-15px_rgba(37,99,235,0.2)] transition-all duration-300">
+                            <motion.div key={item.title} whileHover={{ y: -6 }} className="surface-card rounded-3xl p-8 shadow-sm shadow-blue-50/50 hover:shadow-[0_18px_34px_-15px_rgba(37,99,235,0.2)] transition-all duration-300">
                                 <div className="h-12 w-12 bg-blue-50 rounded-xl flex items-center justify-center mb-5">
                                     <item.icon className="h-6 w-6 text-blue-600" />
                                 </div>
@@ -161,7 +161,7 @@ export default function AboutPage() {
                 </Container>
             </section>
 
-            <section className="py-16 bg-white">
+            <section className="py-16 bg-white/22">
                 <Container>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
                         <div>
@@ -172,7 +172,7 @@ export default function AboutPage() {
                             </p>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 {productCategories.map((category) => (
-                                    <div key={category} className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-700 text-sm font-medium">
+                                    <div key={category} className="surface-card flex items-center gap-2 rounded-xl border border-white/60 px-4 py-3 text-slate-700 text-sm font-medium">
                                         <ShieldCheck className="h-4 w-4 text-blue-600" />
                                         <span>{category}</span>
                                     </div>
@@ -180,7 +180,7 @@ export default function AboutPage() {
                             </div>
                         </div>
 
-                        <div className="bg-slate-50 rounded-3xl p-8 border border-slate-200">
+                        <div className="surface-card rounded-3xl p-8 border border-white/70">
                             <div className="flex items-center gap-3 mb-4">
                                 <Handshake className="h-6 w-6 text-blue-600" />
                                 <h3 className="text-2xl font-bold text-slate-900">Partnerships</h3>
@@ -198,10 +198,10 @@ export default function AboutPage() {
                 </Container>
             </section>
 
-            <section className="py-16 bg-slate-50">
+            <section className="py-16 bg-white/18">
                 <Container>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                        <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200">
+                        <div className="surface-card rounded-3xl p-8 shadow-sm border border-white/70">
                             <div className="flex items-center gap-3 mb-4">
                                 <TrendingUp className="h-6 w-6 text-blue-600" />
                                 <h3 className="text-2xl font-bold text-slate-900">Impact</h3>
@@ -216,7 +216,7 @@ export default function AboutPage() {
                             </ul>
                         </div>
 
-                        <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200">
+                        <div className="surface-card rounded-3xl p-8 shadow-sm border border-white/70">
                             <div className="flex items-center gap-3 mb-4">
                                 <Building2 className="h-6 w-6 text-blue-600" />
                                 <h3 className="text-2xl font-bold text-slate-900">Why Choose DKM</h3>
@@ -234,7 +234,7 @@ export default function AboutPage() {
                 </Container>
             </section>
 
-            <section className="py-16 bg-white">
+            <section className="py-16 bg-white/28">
                 <Container>
                     <div className="text-center max-w-3xl mx-auto mb-10">
                         <h2 className="text-3xl font-bold text-slate-900 mb-3">Clients & Target Segments</h2>

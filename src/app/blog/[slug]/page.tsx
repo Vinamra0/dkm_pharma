@@ -28,11 +28,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     if (!post) notFound()
 
     return (
-        <div className="bg-slate-50 min-h-screen py-12">
+        <div className="min-h-screen page-surface py-12">
             <Container>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
                     {/* Main Content */}
-                    <article className="lg:col-span-2 bg-white rounded-lg shadow-sm border overflow-hidden">
+                    <article className="lg:col-span-2 surface-card rounded-lg shadow-sm border overflow-hidden">
                         <div className="h-[400px] w-full relative bg-slate-200">
                             <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${post.image})` }} />
                         </div>

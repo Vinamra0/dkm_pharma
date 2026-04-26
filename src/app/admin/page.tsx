@@ -121,7 +121,7 @@ export default function AdminDashboard() {
 
     return (
         <ProtectedRoute>
-            <div className="min-h-screen bg-slate-50">
+            <div className="min-h-screen page-surface">
                 <AdminHeader />
 
                 <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -225,7 +225,7 @@ export default function AdminDashboard() {
                                         <div className="text-sm text-slate-500">No recent activity</div>
                                     ) : (
                                         activities.map((a) => (
-                                            <div key={`${a.type}-${a.id}`} className="flex items-center gap-4 p-4 bg-slate-50 rounded-lg">
+                                            <div key={`${a.type}-${a.id}`} className="surface-card flex items-center gap-4 rounded-lg p-4">
                                                 <div className={`w-10 h-10 rounded-full flex items-center justify-center ${a.type === 'blog' ? 'bg-blue-100' : 'bg-cyan-100'}`}>
                                                     {a.type === 'blog' ? <FileText className="w-5 h-5 text-blue-600" /> : <Package className="w-5 h-5 text-cyan-600" />}
                                                 </div>

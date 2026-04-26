@@ -36,7 +36,7 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
+        <div className="min-h-screen page-surface flex items-center justify-center px-4">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -62,7 +62,7 @@ export default function LoginPage() {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.3, duration: 0.4 }}
-                    className="glass rounded-2xl p-8 shadow-xl"
+                    className="surface-card rounded-2xl p-8 shadow-xl"
                 >
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {error && (

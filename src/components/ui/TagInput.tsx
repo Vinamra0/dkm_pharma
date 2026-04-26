@@ -84,7 +84,7 @@ export function TagInput({
             )}
             <div
                 className={cn(
-                    "flex flex-wrap gap-2 min-h-[44px] w-full rounded-lg border border-slate-300 bg-white px-3 py-2",
+                    "flex flex-wrap gap-2 min-h-[44px] w-full rounded-lg border border-white/80 bg-white/78 backdrop-blur-sm px-3 py-2 shadow-[0_10px_24px_-20px_rgba(15,23,42,0.55)]",
                     "focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent",
                     "transition-all duration-200",
                     error && "border-red-500 focus-within:ring-red-500"

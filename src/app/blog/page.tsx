@@ -55,7 +55,7 @@ export default async function BlogPage({
     filteredPosts = filteredPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
     return (
-        <div className="bg-slate-50 min-h-screen py-12">
+        <div className="min-h-screen page-surface py-12">
             <Container>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
                     {/* Main Content */}
@@ -84,7 +84,7 @@ export default async function BlogPage({
                         </div>
 
                         {filteredPosts.length === 0 ? (
-                            <div className="bg-white rounded-lg p-8 text-center">
+                            <div className="surface-card rounded-lg p-8 text-center">
                                 <p className="text-slate-600">No posts found in this category.</p>
                                 <Button variant="link" asChild className="mt-4">
                                     <Link href="/blog">View all posts</Link>
@@ -92,7 +92,7 @@ export default async function BlogPage({
                             </div>
                         ) : (
                             filteredPosts.map((post) => (
-                            <article key={post.id} className="bg-white rounded-lg overflow-hidden shadow-sm border flex flex-col md:flex-row">
+                            <article key={post.id} className="surface-card rounded-lg overflow-hidden shadow-sm border flex flex-col md:flex-row">
                                 <div className="md:w-1/3 h-48 md:h-auto bg-slate-200 relative">
                                     <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${post.image})` }} />
                                 </div>

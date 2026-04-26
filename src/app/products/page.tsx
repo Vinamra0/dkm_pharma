@@ -362,7 +362,7 @@ export default function ProductsPage() {
     };
 
     return (
-        <div className="bg-slate-50 min-h-screen py-12">
+        <div className="min-h-screen page-surface py-12">
             <Container>
                 <div className="text-center max-w-3xl mx-auto mb-12">
                     <h1 className="text-4xl font-bold tracking-tight mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-sky-500 to-cyan-500">
@@ -520,7 +520,7 @@ export default function ProductsPage() {
                                     exit={{ opacity: 0, scale: 0.9 }}
                                     transition={{ duration: 0.2 }}
                                     key={product.id}
-                                    className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col h-full"
+                                    className="surface-card rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col h-full"
                                 >
                                     <div className="h-52 bg-slate-100 relative overflow-hidden">
                                         <div

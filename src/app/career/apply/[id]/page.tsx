@@ -33,7 +33,7 @@ export default async function CareerApplyPage({ params, searchParams }: PageProp
     const submitted = query.submitted === '1'
 
     return (
-        <div className="min-h-screen bg-slate-50 py-12">
+        <div className="min-h-screen page-surface py-12">
             <Container>
                 <div className="mx-auto max-w-4xl space-y-8">
                     <div className="space-y-4">
@@ -57,7 +57,7 @@ export default async function CareerApplyPage({ params, searchParams }: PageProp
                     ) : null}
 
                     <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-                        <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+                        <div className="rounded-3xl border border-slate-200 surface-card p-8 shadow-sm">
                             <form action="/career/apply/submit" method="post" encType="multipart/form-data" className="space-y-5">
                                 <input type="hidden" name="jobId" value={job?.id || id} />
                                 <input type="hidden" name="jobTitle" value={title} />
@@ -117,7 +117,7 @@ export default async function CareerApplyPage({ params, searchParams }: PageProp
                             </form>
                         </div>
 
-                        <aside className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+                        <aside className="rounded-3xl border border-slate-200 surface-card p-8 shadow-sm">
                             <h2 className="text-xl font-semibold text-slate-900">Role Snapshot</h2>
                             <div className="mt-6 space-y-4 text-sm text-slate-600">
                                 <div>

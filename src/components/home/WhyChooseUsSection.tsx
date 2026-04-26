@@ -50,14 +50,14 @@ const itemVariants = {
 
 export function WhyChooseUsSection() {
     return (
-        <section className="py-24 bg-white overflow-hidden">
+        <section className="py-16 md:py-20 bg-white/34 overflow-hidden">
             <div className="container mx-auto px-4">
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.8 }}
-                    className="text-center max-w-3xl mx-auto mb-20"
+                    className="text-center max-w-3xl mx-auto mb-12 md:mb-14"
                 >
                     <h2 className="text-4xl md:text-5xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 pb-2">
                         Trusted Healthcare Partner
@@ -72,7 +72,7 @@ export function WhyChooseUsSection() {
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, margin: "-50px" }}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-7"
                 >
                     {features.map((feature, index) => (
                         <motion.div
@@ -81,7 +81,7 @@ export function WhyChooseUsSection() {
                             whileHover={{
                                 y: -8,
                             }}
-                            className="group relative bg-white rounded-3xl p-10 h-full flex flex-col items-center text-center cursor-pointer transition-all duration-300"
+                            className="group relative surface-card rounded-3xl p-8 md:p-9 h-full flex flex-col items-center text-center cursor-pointer transition-all duration-300"
                         >
                             {/* Base gentle shadow */}
                             <div className="absolute inset-0 rounded-3xl shadow-sm shadow-blue-50/50 transition-shadow duration-300 group-hover:shadow-[0_20px_40px_-15px_rgba(37,99,235,0.2)]" />

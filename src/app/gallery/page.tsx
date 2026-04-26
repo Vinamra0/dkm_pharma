@@ -29,7 +29,7 @@ export default async function GalleryPage() {
     const images = await getGalleryImages()
 
     return (
-        <div className="bg-white min-h-screen">
+        <div className="min-h-screen page-surface">
             <section className="bg-slate-900 py-20 text-white">
                 <Container>
                     <div className="max-w-3xl">

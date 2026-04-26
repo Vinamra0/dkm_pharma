@@ -51,7 +51,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     }
 
     return (
-        <div className="bg-white min-h-screen py-12">
+        <div className="min-h-screen page-surface py-12">
             <Container>
                 <Button variant="ghost" className="mb-8 pl-0 hover:pl-2 transition-all" asChild>
                     <Link href="/products">

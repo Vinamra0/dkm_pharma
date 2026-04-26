@@ -24,7 +24,7 @@ const companies = [
 
 export function CompaniesSection() {
     return (
-        <section className="py-16 bg-white overflow-hidden">
+        <section className="py-14 md:py-16 bg-white/22 overflow-hidden">
             <div className="container mx-auto px-4 mb-10 text-center">
                 <div className="relative inline-block mb-4">
                     <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2">
@@ -57,7 +57,7 @@ export function CompaniesSection() {
                     {[...companies, ...companies].map((company, index) => (
                         <div
                             key={index}
-                            className="flex-shrink-0 flex items-center justify-center w-48 h-24 bg-white rounded-2xl shadow-sm shadow-blue-50/50 hover:shadow-[0_10px_30px_-10px_rgba(37,99,235,0.15)] transition-all duration-300 cursor-pointer p-6"
+                            className="flex-shrink-0 flex items-center justify-center w-48 h-24 surface-card rounded-2xl shadow-sm shadow-blue-50/50 hover:shadow-[0_10px_30px_-10px_rgba(37,99,235,0.15)] transition-all duration-300 cursor-pointer p-6"
                         >
                             <div className="relative w-full h-full">
                                 <Image
