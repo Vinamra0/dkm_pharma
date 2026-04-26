@@ -3,7 +3,7 @@
 import { useState, useRef, ChangeEvent, DragEvent, useEffect } from 'react';
 import { X, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { UPLOAD_CONFIG, UploadType } from '@/lib/upload-config';
-import { resolveImageUrl, API_BASE } from '@/lib/api-base';
+import { resolveImageUrl } from '@/lib/api-base';
 import { Button } from './button';
 
 interface ImageUploadProps {
@@ -27,15 +27,18 @@ export function ImageUpload({
 }: ImageUploadProps) {
     const [isUploading, setIsUploading] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
-    // Resolve an existing value (e.g. /uploads/...) to a full URL for the preview
+    // preview holds a local data-URL (fresh upload) or a resolved backend URL (edit mode)
     const [preview, setPreview] = useState<string | null>(value ? resolveImageUrl(value) : null);
+    // When true, preview is a local data-URL from a fresh upload; don't let useEffect override it
+    const isLocalPreview = useRef(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    // Sync preview when parent changes `value` externally (e.g. edit form loads existing data)
+    // but skip if we just set a local data-URL ourselves
     useEffect(() => {
-        if (!isUploading) {
-            setPreview(value ? resolveImageUrl(value) : null);
-        }
-    }, [value, isUploading]);
+        if (isLocalPreview.current) return;
+        setPreview(value ? resolveImageUrl(value) : null);
+    }, [value]);
 
     const handleFileSelect = async (file: File) => {
         // Validate file type
@@ -54,12 +57,17 @@ export function ImageUpload({
         onUploadingChange?.(true);
 
         try {
-            // Show a local preview immediately while uploading
+            // Show a local data-URL preview immediately for instant feedback
             const reader = new FileReader();
-            reader.onload = (e) => setPreview(e.target?.result as string);
+            reader.onload = (e) => {
+                isLocalPreview.current = true;
+                setPreview(e.target?.result as string);
+            };
             reader.readAsDataURL(file);
 
-            const uploadUrl = `${API_BASE}/api/upload`;
+            // Always POST to /api/upload (same-origin Next.js proxy route).
+            // This avoids browser CORS issues — the proxy forwards server-side to the backend.
+            const uploadUrl = '/api/upload';
 
             const formData = new FormData();
             formData.append('file', file);
@@ -101,12 +109,14 @@ export function ImageUpload({
                 throw new Error(message);
             }
 
-            // Store the raw path (e.g. /uploads/file.jpg) — resolveImageUrl handles display
+            // Store the raw path (/uploads/file.jpg). isLocalPreview stays true so the
+            // data-URL preview is kept — no flicker or blank state after upload.
             onChange(returnedPath);
         } catch (err) {
             console.error('Upload error:', err);
             alert(err instanceof Error ? err.message : 'Failed to upload image');
-            // Clear the optimistic preview on failure
+            // Revert to the previously saved value (or empty) on failure
+            isLocalPreview.current = false;
             setPreview(value ? resolveImageUrl(value) : null);
         } finally {
             setIsUploading(false);
@@ -142,6 +152,7 @@ export function ImageUpload({
     };
 
     const handleRemove = () => {
+        isLocalPreview.current = false;
         setPreview(null);
         onChange('');
         if (fileInputRef.current) {
