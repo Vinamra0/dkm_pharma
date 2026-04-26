@@ -1,6 +1,5 @@
 "use client";
 
-import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -11,6 +10,7 @@ import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/Input';
 import { getAllProducts, deleteProduct, type AdminProduct } from '@/lib/admin-product-data';
+import { resolveImageUrl } from '@/lib/api-base';
 
 export default function ProductsPage() {
     const [products, setProducts] = useState<AdminProduct[]>([]);
@@ -136,12 +136,10 @@ export default function ProductsPage() {
                                             >
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-3">
-                                                        <Image
-                                                            src={product.image}
+                                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                        <img
+                                                            src={resolveImageUrl(product.image, '/assets/products/sample-paracetamol.svg')}
                                                             alt={product.name}
-                                                            width={48}
-                                                            height={48}
-                                                            unoptimized
                                                             className="w-12 h-12 rounded-lg object-cover"
                                                         />
                                                         <div>
