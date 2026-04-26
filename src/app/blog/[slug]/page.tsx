@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/container"
 import { BlogSidebar } from "@/components/blog/BlogSidebar"
 import { Calendar, User, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { API_BASE } from "@/lib/api-base"
 
 interface BlogPostPageProps {
     params: Promise<{
@@ -13,7 +14,7 @@ interface BlogPostPageProps {
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
     const { slug } = await params
-    const base = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001'
+    const base = API_BASE
     let post: { title: string; excerpt: string; content: string; image: string; category: string; date: string; author: string } | null = null
     try {
         const res = await fetch(`${base}/api/blogs/${slug}`, { cache: 'no-store' })

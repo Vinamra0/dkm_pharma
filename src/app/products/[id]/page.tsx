@@ -3,6 +3,7 @@ import Link from "next/link"
 import { Container } from "@/components/ui/container"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, CheckCircle } from "lucide-react"
+import { API_BASE, resolveImageUrl } from "@/lib/api-base"
 
 interface ProductPageProps {
     params: Promise<{
@@ -12,7 +13,8 @@ interface ProductPageProps {
 
 export default async function ProductPage({ params }: ProductPageProps) {
     const { id } = await params
-    const base = process.env.NEXT_PUBLIC_API_BASE || process.env.BACKEND_PROXY_TARGET || 'http://localhost:3001'
+    const res = await fetch(`${API_BASE}/api/products/${id}`, { cache: 'no-store' }).catch(() => null)
+
     let product: {
         category: string
         name: string
@@ -28,26 +30,21 @@ export default async function ProductPage({ params }: ProductPageProps) {
             packaging: string
         }
     } | null = null
-    try {
-        const res = await fetch(`${base}/api/products/${id}`, { cache: 'no-store' })
-        if (res.ok) {
-            const json = await res.json()
-            if (json?.data) product = json.data
-        }
-    } catch {
-        // ignore
+    if (res?.ok) {
+        const json = await res.json().catch(() => null)
+        if (json?.data) product = json.data
     }
     if (!product) notFound()
 
     // Ensure the product always has a `specifications` object expected by the UI
     const normalizedProduct = {
         ...product,
-        specifications: product.specifications || {
-            composition: product.composition || product.description || 'Not provided',
-            dosageForm: product.dosageForm || 'Not provided',
-            packaging: product.packing || product.packageType || 'Not provided'
+        specifications: product!.specifications || {
+            composition: product!.composition || product!.description || 'Not provided',
+            dosageForm: product!.dosageForm || 'Not provided',
+            packaging: product!.packing || product!.packageType || 'Not provided'
         },
-        image: product.image || '/assets/products/sample-paracetamol.svg'
+        image: resolveImageUrl(product!.image)
     }
 
     return (

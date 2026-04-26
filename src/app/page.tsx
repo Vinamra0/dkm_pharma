@@ -4,7 +4,7 @@ import Link from "next/link"
 import { ArrowRight, CheckCircle2 } from "lucide-react"
 import { Container } from "@/components/ui/container"
 import { Button } from "@/components/ui/button"
-// no local fallback; fetch posts from backend
+import { API_BASE } from "@/lib/api-base"
 import { motion } from "framer-motion"
 import { WhyChooseUsSection } from "@/components/home/WhyChooseUsSection"
 import { CompaniesSection } from "@/components/home/CompaniesSection"
@@ -20,8 +20,7 @@ export default function Home() {
     let mounted = true
     async function load() {
       try {
-        const base = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001'
-        const res = await fetch(`${base}/api/blogs`, { cache: 'no-store' })
+        const res = await fetch(`${API_BASE}/api/blogs`, { cache: 'no-store' })
         if (res.ok) {
           const json = await res.json()
           if (Array.isArray(json?.data) && mounted) {

@@ -10,7 +10,7 @@ export interface AdminBlogPost {
     slug: string
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001';
+import { API_BASE } from '@/lib/api-base';
 
 // Get all blogs from backend only
 export async function getAllBlogs(): Promise<AdminBlogPost[]> {

@@ -5,8 +5,10 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Container } from "@/components/ui/container";
 // no local fallback; fetch products from backend
+import { API_BASE, resolveImageUrl } from "@/lib/api-base";
 import { Button } from "@/components/ui/button";
 import { Search, Filter } from "lucide-react";
+
 import { motion, AnimatePresence } from "framer-motion";
 
 type Product = {
@@ -124,16 +126,6 @@ export default function ProductsPage() {
         composition: "",
     });
 
-    const normalizeProductImage = (value?: string) => {
-        if (!value) return '/assets/products/sample-paracetamol.jpg';
-        if (value.startsWith('http://') || value.startsWith('https://') || value.startsWith('data:')) return value;
-        if (value.startsWith('/uploads/')) return value;
-        if (value.startsWith('/assets/')) return value;
-        if (value.startsWith('uploads/')) return `/${value}`;
-        if (value.startsWith('assets/')) return `/${value}`;
-        return value;
-    };
-
     const toggleInArray = (field: keyof Omit<FiltersState, "packing" | "composition">, value: string) => {
         setFilters((prev) => {
             const current = prev[field] as string[];
@@ -149,8 +141,7 @@ export default function ProductsPage() {
         async function fetchProducts() {
             setLoading(true);
             try {
-                const base = process.env.NEXT_PUBLIC_API_BASE || '/backend';
-                const res = await fetch(`${base}/api/products`, { cache: 'no-store' });
+                const res = await fetch(`${API_BASE}/api/products`, { cache: 'no-store' });
                 if (res.ok) {
                     const json = await res.json();
                     if (Array.isArray(json?.data) && mounted) {
@@ -163,7 +154,7 @@ export default function ProductsPage() {
                             return {
                                 id: p._id || p.id || '',
                                 name: p.name || 'Untitled',
-                                image: normalizeProductImage(p.image),
+                                image: resolveImageUrl(p.image, '/assets/products/sample-paracetamol.jpg'),
                                 company: p.company || '',
                                 category: p.category || 'General',
                                 subCategory: p.subCategory || '',

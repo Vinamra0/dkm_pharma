@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { Container } from "@/components/ui/container"
 import { BlogSidebar } from "@/components/blog/BlogSidebar"
-// fetch posts from backend only
+import { API_BASE } from "@/lib/api-base"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 
@@ -14,8 +14,7 @@ export default async function BlogPage({
     // Fetch posts from backend
     let fetchedPosts: Array<{ id: string; title: string; excerpt: string; content: string; author: string; date: string; image: string; category: string; slug: string }> = []
     try {
-        const base = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001'
-        const res = await fetch(`${base}/api/blogs`, { cache: 'no-store' })
+        const res = await fetch(`${API_BASE}/api/blogs`, { cache: 'no-store' })
         if (res.ok) {
             const json = await res.json()
             if (Array.isArray(json?.data)) fetchedPosts = json.data.map((b: { _id?: string; id?: string; slug?: string; title?: string; excerpt?: string; content?: string; author?: string; createdAt?: string; date?: string; image?: string; category?: string }) => ({

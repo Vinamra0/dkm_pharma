@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useState, useRef, ChangeEvent, DragEvent } from 'react';
 import { X, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { UPLOAD_CONFIG, UploadType } from '@/lib/upload-config';
+import { API_BASE, resolveImageUrl } from '@/lib/api-base';
 import { Button } from './button';
 
 interface ImageUploadProps {
@@ -25,21 +26,9 @@ export function ImageUpload({
 }: ImageUploadProps) {
     const [isUploading, setIsUploading] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
-    const [preview, setPreview] = useState<string | null>(value || null);
+    // Resolve an existing value (e.g. /uploads/...) to a full URL for the preview
+    const [preview, setPreview] = useState<string | null>(value ? resolveImageUrl(value) : null);
     const fileInputRef = useRef<HTMLInputElement>(null);
-
-    const getUploadTargets = () => {
-        const envBase = (process.env.NEXT_PUBLIC_API_BASE || '').replace(/\/$/, '');
-        const targets = ['/api/upload'];
-
-        // If backend base is configured, keep it as a fallback.
-        if (envBase) targets.push(`${envBase}/api/upload`);
-
-        // Backend proxy fallback for deployments that route APIs through Next rewrites.
-        targets.push('/backend/api/upload');
-
-        return Array.from(new Set(targets));
-    };
 
     const handleFileSelect = async (file: File) => {
         // Validate file type
@@ -57,83 +46,60 @@ export function ImageUpload({
         setIsUploading(true);
 
         try {
-            // Create preview
+            // Show a local preview immediately while uploading
             const reader = new FileReader();
             reader.onload = (e) => setPreview(e.target?.result as string);
             reader.readAsDataURL(file);
 
-            let uploaded = false;
-            let lastError: Error | null = null;
+            const uploadUrl = `${API_BASE}/api/upload`;
 
-            for (const target of getUploadTargets()) {
-                try {
-                    // Build a fresh form payload per attempt.
-                    // Backends may accept any one of: file, image, upload.
-                    const formData = new FormData();
-                    formData.append('file', file);
-                    formData.append('image', file);
-                    formData.append('upload', file);
-                    formData.append('type', type);
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('type', type);
 
-                    const response = await fetch(target, {
-                        method: 'POST',
-                        body: formData,
-                    });
+            const response = await fetch(uploadUrl, {
+                method: 'POST',
+                body: formData,
+            });
 
-                    type UploadResponse = {
-                        error?: string;
-                        message?: string;
-                        path?: string;
-                        url?: string;
-                        location?: string;
-                        fileName?: string;
-                        data?: { path?: string; url?: string; location?: string; fileName?: string };
-                    };
+            type UploadResponse = {
+                error?: string;
+                message?: string;
+                path?: string;
+                url?: string;
+                location?: string;
+                fileName?: string;
+                data?: { path?: string; url?: string; location?: string; fileName?: string };
+            };
 
-                    let data: UploadResponse = {};
-                    let textBody = '';
-                    const contentType = response.headers.get('content-type') || '';
-                    if (contentType.includes('application/json')) {
-                        data = await response.json().catch(() => ({}));
-                    } else {
-                        textBody = await response.text().catch(() => '');
-                    }
-
-                    const returnedPath =
-                        data?.path ||
-                        data?.url ||
-                        data?.location ||
-                        data?.data?.path ||
-                        data?.data?.url ||
-                        data?.data?.location ||
-                        (data?.fileName ? `${UPLOAD_CONFIG.directories[type]}/${data.fileName}` : '') ||
-                        (data?.data?.fileName ? `${UPLOAD_CONFIG.directories[type]}/${data.data.fileName}` : '');
-
-                    if (response.ok && returnedPath) {
-                        onChange(returnedPath);
-                        uploaded = true;
-                        break;
-                    }
-
-                    const message =
-                        data?.message ||
-                        data?.error ||
-                        textBody ||
-                        `Upload failed (${response.status})`;
-
-                    // Keep trying remaining targets; don't hard-stop on first 4xx.
-                    lastError = new Error(`${message} [${target}]`);
-                } catch (err) {
-                    lastError = err instanceof Error ? err : new Error('Failed to upload image');
-                }
+            let data: UploadResponse = {};
+            const contentType = response.headers.get('content-type') || '';
+            if (contentType.includes('application/json')) {
+                data = await response.json().catch(() => ({}));
             }
 
-            if (!uploaded) {
-                throw lastError || new Error('Failed to upload image');
+            const returnedPath =
+                data?.path ||
+                data?.url ||
+                data?.location ||
+                data?.data?.path ||
+                data?.data?.url ||
+                data?.data?.location ||
+                (data?.fileName ? `/uploads/${data.fileName}` : '') ||
+                (data?.data?.fileName ? `/uploads/${data.data.fileName}` : '');
+
+            if (!response.ok || !returnedPath) {
+                const message = data?.message || data?.error || `Upload failed (${response.status})`;
+                throw new Error(message);
             }
+
+            // Store the raw path (e.g. /uploads/file.jpg) — resolveImageUrl handles display
+            onChange(returnedPath);
         } catch (err) {
             console.error('Upload error:', err);
             alert(err instanceof Error ? err.message : 'Failed to upload image');
+            // Clear the optimistic preview on failure
+            setPreview(value ? resolveImageUrl(value) : null);
         } finally {
             setIsUploading(false);
         }

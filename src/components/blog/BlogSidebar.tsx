@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-// no local fallback; always fetch from backend
+import { API_BASE } from "@/lib/api-base"
 import { Search } from "lucide-react"
 import { useState, useEffect } from "react"
 
@@ -16,8 +16,7 @@ export function BlogSidebar() {
         let mounted = true
         async function load() {
             try {
-                const base = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001'
-                const res = await fetch(`${base}/api/blogs`, { cache: 'no-store' })
+                const res = await fetch(`${API_BASE}/api/blogs`, { cache: 'no-store' })
                 if (res.ok) {
                     const json = await res.json()
                     if (Array.isArray(json?.data) && mounted) {

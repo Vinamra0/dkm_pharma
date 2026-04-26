@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 
 import { useEffect, useState } from 'react';
+import { API_BASE } from '@/lib/api-base';
 
 const defaultStats = [
     {
@@ -40,10 +41,9 @@ export default function AdminDashboard() {
         let mounted = true;
         async function loadCounts() {
             try {
-                const base = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001';
                 const [blogsRes, prodsRes] = await Promise.all([
-                    fetch(`${base}/api/blogs`, { cache: 'no-store' }),
-                    fetch(`${base}/api/products`, { cache: 'no-store' })
+                    fetch(`${API_BASE}/api/blogs`, { cache: 'no-store' }),
+                    fetch(`${API_BASE}/api/products`, { cache: 'no-store' })
                 ]);
                 let blogCount = 0;
                 let prodCount = 0;
@@ -69,10 +69,9 @@ export default function AdminDashboard() {
         // load recent activities
         async function loadActivities() {
                 try {
-                const base = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001';
                 const [blogsRes, prodsRes] = await Promise.all([
-                    fetch(`${base}/api/blogs`, { cache: 'no-store' }),
-                    fetch(`${base}/api/products`, { cache: 'no-store' }),
+                    fetch(`${API_BASE}/api/blogs`, { cache: 'no-store' }),
+                    fetch(`${API_BASE}/api/products`, { cache: 'no-store' }),
                 ]);
                 const items: Array<{ id: string; type: 'blog' | 'product'; title: string; date: string | null; href: string }> = [];
                 if (blogsRes.ok) {
