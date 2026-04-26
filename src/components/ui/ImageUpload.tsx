@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useState, useRef, ChangeEvent, DragEvent, useEffect } from 'react';
 import { X, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { UPLOAD_CONFIG, UploadType } from '@/lib/upload-config';
-import { resolveImageUrl } from '@/lib/api-base';
+import { resolveImageUrl, API_BASE } from '@/lib/api-base';
 import { Button } from './button';
 
 interface ImageUploadProps {
@@ -60,7 +60,7 @@ export function ImageUpload({
             reader.onload = (e) => setPreview(e.target?.result as string);
             reader.readAsDataURL(file);
 
-            const uploadUrl = '/api/upload';
+            const uploadUrl = `${API_BASE}/api/upload`;
 
             const formData = new FormData();
             formData.append('file', file);
